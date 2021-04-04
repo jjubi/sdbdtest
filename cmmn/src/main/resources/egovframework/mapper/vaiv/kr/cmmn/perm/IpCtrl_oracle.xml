@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : ipCtrl.xml 
+  * 상세설명 : ip 제어 데이터 핸들링
+  * 작성일시 : 2021. 03. 03
+  * 작 성 자  : jeon
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2021. 03. 03.    jeon     최초등록
+  *
+  * 
+ -->
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ipCtrl">
+	<select id="selectIpCtrlList" parameterType="ipCtrlVO" resultType="ipCtrlVO">
+		<include refid="cmmn.Common.common-paging-top"></include>
+		SELECT PERM_IP_ID AS permIpId
+			   ,CONNECT_IP AS connectIp
+			   ,PERM_AT AS permAt
+			   ,TO_CHAR(REGIST_DE, 'YYYY-MM-DD') AS registDe
+		 	   ,REGIST_ID AS registId
+			   ,TO_CHAR(UPDT_DE, 'YYYY-MM-DD') AS updtDe
+			   ,UPDT_ID AS updtId
+		FROM T_PERM_IP_M01
+		WHERE PERM_IP_ID IS NOT NULL
+		  AND DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND CONNECT_IP LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test="permAt != null and permAt != '' ">
+          AND PERM_AT = #{permAt}
+        </if>
+		ORDER BY REGIST_DE DESC
+		<include refid="cmmn.Common.common-paging-bottom"></include>
+	</select>
+
+	<select id="selectIpCtrlTotCnt" parameterType="ipCtrlVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_PERM_IP_M01
+		WHERE PERM_IP_ID IS NOT NULL
+		  AND DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND CONNECT_IP LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test="permAt != null and permAt != '' ">
+          AND PERM_AT = #{permAt}
+        </if>
+	</select>
+	
+	<insert id="insertIpCtrl" parameterType="ipCtrlVO">
+		INSERT INTO T_PERM_IP_M01
+		(
+			PERM_IP_ID
+			,CONNECT_IP
+			,PERM_AT
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+		)
+		VALUES
+		(
+			#{permIpId}
+			,#{connectIp}
+			,#{permAt}
+			,'N'
+			,SYSDATE
+			,#{registId}
+			,SYSDATE
+			,#{updtId}
+		)
+	</insert>
+	
+	<select id="selectIpCtrl" parameterType="ipCtrlVO" resultType="ipCtrlVO">
+		SELECT PERM_IP_ID AS permIpId
+			   ,CONNECT_IP AS connectIp
+			   ,PERM_AT AS permAt
+			   ,TO_CHAR(REGIST_DE, 'YYYY-MM-DD') AS registDe
+		 	   ,REGIST_ID AS registId
+			   ,TO_CHAR(UPDT_DE, 'YYYY-MM-DD') AS updtDe
+			   ,UPDT_ID AS updtId
+		FROM T_PERM_IP_M01
+		WHERE PERM_IP_ID = #{permIpId}
+		<if test='permAt != null and permAt != ""'>
+		  AND PERM_AT = #{permAt}
+		</if>
+		  AND DELETE_AT = 'N'
+	</select>
+	
+	<update id="updateIpCtrl" parameterType="ipCtrlVO">
+		UPDATE T_PERM_IP_M01
+		SET UPDT_DE = SYSDATE
+			,UPDT_ID = #{updtId}
+			,CONNECT_IP = #{connectIp}
+		WHERE PERM_IP_ID = #{permIpId}
+		  AND PERM_AT = #{permAt}
+	</update>
+	
+	<delete id="deleteIpCtrl" parameterType="ipCtrlVO">
+		UPDATE T_PERM_IP_M01
+		SET UPDT_DE = SYSDATE
+			,UPDT_ID = #{updtId}
+			,DELETE_AT = 'Y'
+		WHERE PERM_IP_ID = #{permIpId}
+	</delete>
+	
+	<select id="checkIpCtrlDplct" parameterType="ipCtrlVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_PERM_IP_M01
+		WHERE PERM_IP_ID IS NOT NULL
+		  AND DELETE_AT = 'N'
+		  AND CONNECT_IP = #{connectIp}
+        <if test="permAt != null and permAt != '' ">
+          AND PERM_AT = #{permAt}
+        </if>
+	</select>
+	
+	<select id="checkIpCtrl" parameterType="ipCtrlVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_PERM_IP_M01
+		WHERE PERM_IP_ID IS NOT NULL
+		  AND DELETE_AT = 'N'
+		  AND #{connectIp} LIKE REPLACE(CONNECT_IP,'*','%')
+        <if test="permAt != null and permAt != '' ">
+          AND PERM_AT = #{permAt}
+        </if>
+	</select>
+	
+	
+</mapper>

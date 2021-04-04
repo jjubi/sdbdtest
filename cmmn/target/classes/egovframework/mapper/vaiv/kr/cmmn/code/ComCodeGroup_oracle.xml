@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : ComCodeGroup.xml 
+  * 상세설명 : 공통코드 그룹코드 데이터 핸들링
+  * 작성일시 : 2021. 03. 03
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2021. 03. 03.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.ComCodeGroup">
+	<select id="selectComCodeGroupList" parameterType="comCodeGroupVO" resultType="comCodeGroupVO">
+		<include refid="cmmn.Common.common-paging-top"></include>
+		SELECT
+			GROUP_CODE AS groupCode
+			,GROUP_NM AS groupNm
+			<include refid="cmmn.Common.common-column2"></include>
+		FROM T_CMMN_GROUP_CODE_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND GROUP_CODE LIKE '%' || #{searchKeyword} || '%'
+        </if>
+		<if test="searchCondition == 2">
+		  AND GROUP_NM LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test="searchCondition == 3">
+          AND USE_AT = #{searchKeyword}
+        </if>
+        ORDER BY REGIST_DE DESC 
+        <include refid="cmmn.Common.common-paging-bottom"></include>
+	</select>
+	
+	<select id="selectComCodeGroupListTotCnt" parameterType="comCodeGroupVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_CMMN_GROUP_CODE_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND GROUP_CODE LIKE '%' || #{searchKeyword} || '%'
+        </if>
+		<if test="searchCondition == 2">
+		  AND GROUP_NM LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test="searchCondition == 3">
+          AND USE_AT = #{searchKeyword}
+        </if>
+	</select>
+	
+	<select id="checkGroupCodeDplct" parameterType="string" resultType="int">
+		SELECT COUNT(*)
+		FROM T_CMMN_GROUP_CODE_M01
+		WHERE GROUP_CODE = #{value}
+	</select>
+	
+	<insert id="insertComCodeGroup" parameterType="comCodeGroupVO">
+		INSERT INTO T_CMMN_GROUP_CODE_M01
+		(
+			GROUP_CODE
+			,GROUP_NM
+			,REGIST_DE
+			,UPDT_DE
+			,USE_AT
+			,DELETE_AT
+		)
+		VALUES 
+		(
+			#{groupCode}
+			,#{groupNm}
+			,SYSDATE
+			,SYSDATE
+			,#{useAt}
+			,'N'
+		)
+	</insert>
+	
+	<select id="selectComCodeGroup" parameterType="comCodeGroupVO" resultType="comCodeGroupVO">
+		SELECT
+			GROUP_CODE AS groupCode
+			,GROUP_NM AS groupNm
+			<include refid="cmmn.Common.common-column2"></include>
+		FROM T_CMMN_GROUP_CODE_M01
+		WHERE DELETE_AT = 'N'
+		  AND GROUP_CODE = #{groupCode}
+	</select>
+	
+	<update id="updateComCodeGroup" parameterType="comCodeGroupVO">
+		UPDATE T_CMMN_GROUP_CODE_M01
+		SET	UPDT_DE = SYSDATE
+			,GROUP_NM = #{groupNm}
+			,USE_AT = #{useAt}
+		WHERE DELETE_AT = 'N'
+		  AND GROUP_CODE = #{groupCode}
+	</update>
+	
+	<update id="deleteComCodeGroup" parameterType="comCodeGroupVO">
+		UPDATE T_CMMN_GROUP_CODE_M01
+		SET UPDT_DE = SYSDATE
+			,DELETE_AT = 'Y'
+			,GROUP_CODE = 'DEL_' || GROUP_CODE || '_' || TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		WHERE DELETE_AT = 'N'
+		  AND GROUP_CODE = #{groupCode}
+	</update>
+	
+</mapper>
+
+
+
+

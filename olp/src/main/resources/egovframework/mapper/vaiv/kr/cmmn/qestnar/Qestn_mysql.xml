@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : "Qestn".xml 
+  * 상세설명 : 설문 문항 데이터 핸들링
+  * 작성일시 : 2020. 12. 31
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2020. 12. 31.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Qestn">
+	<insert id="insertQestnHistory" parameterType="qestnVO">
+		INSERT INTO T_QESTNAR_QESTN_H01
+		(
+			QESTNAR_SEQ_NO
+			,QESTN_SEQ_NO
+			,QESTN_TY
+			,QESTN_SJ
+			,QESTN_HPCM
+			,QESTN_ESSNTL_AT
+			,QESTN_ORDR
+			,QESTN_PGE
+			,USE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,OPTN_INFO
+			,ASWPER_INFO
+			,HIST_REGIST_DE		
+		)
+		SELECT
+			TA.QESTNAR_SEQ_NO
+			,TA.QESTN_SEQ_NO
+			,TA.QESTN_TY
+			,TA.QESTN_SJ
+			,TA.QESTN_HPCM
+			,TA.QESTN_ESSNTL_AT
+			,TA.QESTN_ORDR
+			,TA.QESTN_PGE
+			,TA.USE_AT
+			,TA.REGIST_DE
+			,TA.REGIST_ID
+			,JTB.QESTN_ASWPER_ALL
+			,JTC.QESTN_OPTN_ALL
+			,NOW() AS HIST_REGIST_DE
+		FROM T_QESTNAR_QESTN_M01 TA
+		LEFT OUTER JOIN (
+			SELECT 
+				TB.QESTN_SEQ_NO
+				,CONCAT(GROUP_CONCAT(TB.ASWPER_SEQ_NO), ' | '
+						, GROUP_CONCAT(TB.ASWPER_TEXT), ' | '
+						, GROUP_CONCAT(TB.ASWPER_SCORE), ' | '
+						, GROUP_CONCAT(TB.ASWPER_IMAGE), ' | '
+						, GROUP_CONCAT(TB.ASWPER_ETC_AT), ' | '
+						, GROUP_CONCAT(TB.REGIST_DE)) AS QESTN_ASWPER_ALL
+			FROM T_QESTNAR_QESTN_ASWPER_M01 TB
+			GROUP BY TB.QESTN_SEQ_NO
+		) JTB
+		ON (TA.QESTN_SEQ_NO = JTB.QESTN_SEQ_NO)
+		LEFT OUTER JOIN (
+			SELECT
+				TC.QESTN_SEQ_NO
+				,CONCAT(GROUP_CONCAT(TC.OPTN_SEQ_NO), ' | '
+						, GROUP_CONCAT(TC.OPTN_TY), ' | '
+						, GROUP_CONCAT(TC.OPTN_VALUE), ' | '
+						, GROUP_CONCAT(TC.REGIST_DE)) AS QESTN_OPTN_ALL
+			FROM T_QESTNAR_QESTN_OPTN_M01 TC
+			GROUP BY QESTN_SEQ_NO
+		) JTC
+		ON (TA.QESTN_SEQ_NO = JTC.QESTN_SEQ_NO)
+		WHERE TA.QESTNAR_SEQ_NO = #{qestnarSeqNo}
+	</insert>
+	
+	<delete id="deleteQestn" parameterType="qestnVO">
+		DELETE FROM T_QESTNAR_QESTN_M01
+		WHERE QESTNAR_SEQ_NO = #{qestnarSeqNo}
+	</delete>
+	
+	<delete id="deleteQestnOptn" parameterType="qestnVO">
+		DELETE FROM T_QESTNAR_QESTN_OPTN_M01
+		WHERE QESTN_SEQ_NO IN (SELECT TA.QESTN_SEQ_NO FROM T_QESTNAR_QESTN_M01 TA WHERE TA.QESTNAR_SEQ_NO = #{qestnarSeqNo})
+	</delete>
+	
+	<delete id="deleteQestnAswper" parameterType="qestnVO">
+		DELETE FROM T_QESTNAR_QESTN_ASWPER_M01
+		WHERE QESTN_SEQ_NO IN (SELECT TA.QESTN_SEQ_NO FROM T_QESTNAR_QESTN_M01 TA WHERE TA.QESTNAR_SEQ_NO = #{qestnarSeqNo})
+	</delete>
+	
+	<insert id="insertQestn" parameterType="qestnVO">
+		INSERT INTO T_QESTNAR_QESTN_M01
+		(
+			QESTNAR_SEQ_NO
+			,QESTN_TY
+			,QESTN_SJ
+			,QESTN_HPCM
+			,QESTN_ESSNTL_AT
+			,QESTN_ORDR
+			,QESTN_PGE
+			,USE_AT
+			,REGIST_DE
+			,REGIST_ID
+		) 
+		VALUES
+		(
+			#{qestnarSeqNo}
+			,#{qestnTy}
+			,#{qestnSj}
+			,#{qestnHpcm}
+			,#{qestnEssntlAt}
+			,#{qestnOrdr}
+			,#{qestnPge}
+			,#{useAt}
+			,NOW()
+			,#{registId}
+		)
+		<selectKey keyProperty="qestnSeqNo" resultType="string" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<insert id="insertQestnOptn" parameterType="qestnOptnVO">
+		INSERT INTO T_QESTNAR_QESTN_OPTN_M01
+		(
+			QESTN_SEQ_NO
+			,OPTN_TY
+			,OPTN_VALUE
+			,REGIST_DE
+		)
+		VALUES
+		(
+			#{qestnSeqNo}
+			,#{optnTy}
+			,#{optnValue}
+			,NOW()
+		)
+	</insert>
+	
+	<insert id="insertQestnAswper" parameterType="qestnAswperVO">
+		INSERT INTO T_QESTNAR_QESTN_ASWPER_M01
+		(
+			QESTN_SEQ_NO
+			,ASWPER_TEXT
+			,ASWPER_SCORE
+			,ASWPER_IMAGE
+			,ASWPER_ETC_AT
+			,REGIST_DE
+		)
+		VALUES
+		(
+			#{qestnSeqNo}
+			,#{aswperText}
+			,#{aswperScore}
+			,#{aswperImage}
+			,#{aswperEtcAt}
+			,NOW()
+		)
+	</insert>
+	
+	<select id="selectQestnList" parameterType="qestnarSearchVO" resultType="qestnVO">
+		SELECT
+			QESTNAR_SEQ_NO AS qestnarSeqNo
+			,QESTN_SEQ_NO AS qestnSeqNo
+			,QESTN_TY AS qestnTy
+			,QESTN_SJ AS qestnSj
+			,QESTN_HPCM AS qestnHpcm
+			,QESTN_ESSNTL_AT AS qestnEssntlAt
+			,QESTN_ORDR AS 	qestnOrdr
+			,QESTN_PGE AS qestnPge
+			,USE_AT AS useAt
+			,REGIST_DE AS registDe
+			,REGIST_ID AS registId
+			,(SELECT MAX(TA.QESTN_PGE) FROM T_QESTNAR_QESTN_M01 TA WHERE TA.QESTNAR_SEQ_NO = #{qestnarSeqNo}) AS qestnMaxPge
+		FROM T_QESTNAR_QESTN_M01
+		WHERE QESTNAR_SEQ_NO = #{qestnarSeqNo}
+		<if test='useAt != null and useAt != ""'>
+			AND USE_AT = #{useAt}
+		</if>
+		<if test='qestnPge != null and qestnPge != ""'>
+			AND QESTN_PGE = #{qestnPge}
+		</if>
+		ORDER BY QESTN_PGE, QESTN_ORDR
+	</select>
+	
+	<select id="selectQestnAswperList" parameterType="qestnVO" resultType="qestnAswperVO">
+		SELECT
+			QESTN_SEQ_NO AS qestnSeqNo
+			,ASWPER_SEQ_NO AS aswperSeqNo
+			,ASWPER_TEXT AS aswperText
+			,ASWPER_SCORE AS aswperScore
+			,ASWPER_IMAGE AS aswperImage
+			,ASWPER_ETC_AT AS aswperEtcAt
+			,REGIST_DE AS registDe
+		FROM T_QESTNAR_QESTN_ASWPER_M01
+		WHERE QESTN_SEQ_NO = #{qestnSeqNo}
+	</select>
+	
+	<select id="selectQestnOptnList" parameterType="qestnVO" resultType="qestnOptnVO">
+		SELECT
+			QESTN_SEQ_NO AS qestnSeqNo
+			,OPTN_SEQ_NO AS optnSeqNo
+			,OPTN_TY AS optnTy
+			,OPTN_VALUE AS optnValue
+			,REGIST_DE AS registDe
+		FROM T_QESTNAR_QESTN_OPTN_M01
+		WHERE QESTN_SEQ_NO = #{qestnSeqNo}
+	</select>
+	
+	<select id="selectQestn" parameterType="qestnarSearchVO" resultType="qestnVO">
+		SELECT
+			QESTNAR_SEQ_NO AS qestnarSeqNo
+			,QESTN_SEQ_NO AS qestnSeqNo
+			,QESTN_TY AS qestnTy
+			,QESTN_SJ AS qestnSj
+			,QESTN_HPCM AS qestnHpcm
+			,QESTN_ESSNTL_AT AS qestnEssntlAt
+			,QESTN_ORDR AS qestnOrdr
+			,QESTN_PGE AS qestnPge
+			,USE_AT AS useAt
+			,REGIST_DE AS registDe
+			,REGIST_ID AS registId
+		FROM T_QESTNAR_QESTN_M01
+		WHERE QESTNAR_SEQ_NO = #{qestnarSeqNo}
+		  AND QESTN_SEQ_NO = #{qestnSeqNo}
+		<if test='useAt != null and useAt != ""'>
+			AND USE_AT = #{useAt}
+		</if>
+		<if test='qestnPge != null and qestnPge != ""'>
+			AND QESTN_PGE = #{qestnPge}
+		</if>
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+

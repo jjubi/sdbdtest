@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : Ntt.xml 
+  * 상세설명 : 게시물 데이터 핸들링
+  * 작성일시 : 2020. 12. 31
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2020. 12. 31.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Ntt">
+	<select id="selectNttList" parameterType="bbsSearchVO" resultType="nttVO">
+		SELECT
+			TA.BBS_ID AS bbsId
+			,TA.NTT_ID AS nttId
+			,TA.NTT_SJ AS nttSj
+			,TA.NTT_CN AS nttCn
+			,TA.NTT_RDCNT AS nttRdcnt
+			,TA.ATCH_FILE_ID AS atchFileId
+			,TA.NTT_ORDR AS nttOrdr
+			,TA.NTT_DP AS nttDp
+			,TA.NTT_INNER_ORDR AS nttInnerOrdr
+			,TA.SECRET_AT AS secretAt
+			,TA.SECRET_KEY AS secretKey
+			,TA.NOTICE_AT AS noticeAt
+			,TA.LC_INDICT_AT AS lcIndictAt
+			,TA.ADRES AS adres
+			,TA.ADRES_LA AS adresLa
+			,TA.ADRES_LO AS adresLo
+			,TA.POPUP_AT AS popupAt
+			,TA.KOGL_TY AS koglTy
+			,DATE_FORMAT(TA.REGIST_DE, '%Y-%m-%d') AS registDe
+			,TA.REGIST_ID AS registId
+			,DATE_FORMAT(TA.UPDT_DE, '%Y-%m-%d') AS updtDe
+			,TA.UPDT_ID AS updtId
+			,TC.USER_NM AS registNm
+			,TA.UPPER_NTT_ID AS upperNttId
+		FROM T_NTT_M01 TA
+		INNER JOIN T_BBS_M01 TB
+		ON (TA.BBS_ID = TB.BBS_ID AND TB.DELETE_AT = 'N' AND TB.USE_AT = 'Y')
+		LEFT OUTER JOIN COMVNUSERMASTER TC
+		ON (TA.REGIST_ID = TC.ESNTL_ID)
+		WHERE TA.DELETE_AT = 'N'
+		  AND TA.BBS_ID = #{bbsId}
+		<if test="searchCondition == 1">
+		  AND TA.NTT_SJ LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 2">
+		  AND TA.NTT_CN LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+        <if test="searchCondition == 5">
+		  AND TA.NOTICE_AT = #{searchKeyword}
+        </if>
+        ORDER BY TA.NTT_ORDR DESC, TA.NTT_INNER_ORDR 
+        <include refid="cmmn.Common.common-paging"></include>
+	</select>
+	
+	<select id="selectNttListTotCnt" parameterType="bbsSearchVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_NTT_M01 TA
+		INNER JOIN T_BBS_M01 TB
+		ON (TA.BBS_ID = TB.BBS_ID AND TB.DELETE_AT = 'N' AND TB.USE_AT = 'Y')
+		WHERE TA.DELETE_AT = 'N'
+		  AND TA.BBS_ID = #{bbsId}
+		<if test="searchCondition == 1">
+		  AND TA.NTT_SJ LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 2">
+		  AND TA.NTT_CN LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+        <if test="searchCondition == 5">
+		  AND TA.NOTICE_AT = #{searchKeyword}
+        </if>
+	</select>
+	
+	<insert id="insertNtt" parameterType="nttVO">
+		<selectKey resultType="int" keyProperty="nttId" order="BEFORE">
+			SELECT AUTO_INCREMENT
+			FROM information_schema.TABLES
+			WHERE TABLE_SCHEMA = 'cms_v1'
+			AND TABLE_NAME = 'T_NTT_M01'
+		</selectKey>
+		INSERT INTO T_NTT_M01
+		(
+			BBS_ID
+			,NTT_ID
+			,NTT_SJ
+			,NTT_CN
+			,NTT_RDCNT
+			,UPPER_NTT_ID
+			,ATCH_FILE_ID
+			,NTT_ORDR
+			,NTT_DP
+			,NTT_INNER_ORDR
+			,SECRET_AT
+			,SECRET_KEY
+			,NOTICE_AT
+			,LC_INDICT_AT
+			,ADRES
+			,ADRES_LA
+			,ADRES_LO
+			,POPUP_AT
+			,KOGL_TY
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+		)
+		VALUES
+		(
+			#{bbsId}
+			,#{nttId}
+			,#{nttSj}
+			,#{nttCn}
+			,0
+			,#{upperNttId}
+			,#{atchFileId}
+			<if test='nttOrdr == null or nttOrdr == ""'>
+			,#{nttId}
+			</if>
+			<if test='nttOrdr != null and nttOrdr != ""'>
+			,#{nttOrdr}
+			</if>
+			,#{nttDp}
+			,#{nttInnerOrdr}
+			,#{secretAt}
+			,#{secretKey}
+			,#{noticeAt}
+			,#{lcIndictAt}
+			,#{adres}
+			,#{adresLa}
+			,#{adresLo}
+			,#{popupAt}
+			,#{koglTy}
+			,'N'
+			,NOW()
+			,#{registId}
+			,NOW()
+			,#{updtId}
+		)
+	</insert>
+	
+	<select id="selectNtt" parameterType="bbsSearchVO" resultType="nttVO">
+		SELECT
+			TA.BBS_ID AS bbsId
+			,TA.NTT_ID AS nttId
+			,TA.NTT_SJ AS nttSj
+			,TA.NTT_CN AS nttCn
+			,TA.NTT_RDCNT AS nttRdcnt
+			,TA.ATCH_FILE_ID AS atchFileId
+			,TA.NTT_ORDR AS nttOrdr
+			,TA.NTT_DP AS nttDp
+			,TA.NTT_INNER_ORDR AS nttInnerOrdr
+			,TA.SECRET_AT AS secretAt
+			,TA.SECRET_KEY AS secretKey
+			,TA.NOTICE_AT AS noticeAt
+			,TA.LC_INDICT_AT AS lcIndictAt
+			,TA.ADRES AS adres
+			,TA.ADRES_LA AS adresLa
+			,TA.ADRES_LO AS adresLo
+			,TA.POPUP_AT AS popupAt
+			,TA.KOGL_TY AS koglTy
+			,DATE_FORMAT(TA.REGIST_DE, '%Y-%m-%d') AS registDe
+			,TA.REGIST_ID AS registId
+			,DATE_FORMAT(TA.UPDT_DE, '%Y-%m-%d') AS updtDe
+			,TA.UPDT_ID AS updtId
+			,TC.USER_NM AS registNm
+			,TA.UPPER_NTT_ID AS upperNttId
+			,(SELECT IF(COUNT(*) > 0, 'Y','N') FROM T_NTT_M01 TD WHERE TD.DELETE_AT = 'N' AND TD.UPPER_NTT_ID = TA.NTT_ID) AS nttAnswerYn 
+		FROM T_NTT_M01 TA
+		INNER JOIN T_BBS_M01 TB
+		ON (TA.BBS_ID = TB.BBS_ID AND TB.DELETE_AT = 'N' AND TB.USE_AT = 'Y')
+		LEFT OUTER JOIN COMVNUSERMASTER TC
+		ON (TA.REGIST_ID = TC.ESNTL_ID)
+		WHERE TA.DELETE_AT = 'N'
+		  AND TA.NTT_ID = #{nttId}
+	</select>
+	
+	<update id="incrementNttRdcnt" parameterType="bbsSearchVO">
+		UPDATE T_NTT_M01
+		SET	NTT_RDCNT = NTT_RDCNT + 1
+		WHERE DELETE_AT = 'N'
+		  AND NTT_ID = #{nttId}
+	</update>
+	
+	<update id="updateNtt" parameterType="nttVO">
+		UPDATE T_NTT_M01
+		SET NTT_SJ = #{nttSj}
+			,NTT_CN = #{nttCn}
+			,ATCH_FILE_ID = #{atchFileId}
+			,SECRET_AT = #{secretAt}
+			,SECRET_KEY = #{secretKey}
+			,NOTICE_AT = #{noticeAt}
+			,LC_INDICT_AT = #{lcIndictAt}
+			,ADRES = #{adres}
+			,ADRES_LA = #{adresLa}
+			,ADRES_LO = #{adresLo}
+			,POPUP_AT = #{popupAt}
+			,KOGL_TY = #{koglTy}
+			,UPDT_DE = NOW()
+			,UPDT_ID = #{updtId}
+		WHERE DELETE_AT = 'N'
+		  AND NTT_ID = #{nttId}	
+	</update>
+	
+	<update id="deleteNtt" parameterType="nttVO">
+		UPDATE T_NTT_M01 UTA
+		INNER JOIN (
+			WITH RECURSIVE T_NTT_M01_T AS (
+				SELECT
+					UPPER_NTT_ID
+					,NTT_ID
+				FROM T_NTT_M01
+				WHERE DELETE_AT = 'N'
+				  AND NTT_ID = #{nttId}
+				UNION ALL
+				SELECT
+				   TA.UPPER_NTT_ID
+				   ,TA.NTT_ID
+				FROM T_NTT_M01 TA
+				INNER JOIN T_NTT_M01_T TB
+				ON (TA.UPPER_NTT_ID = TB.NTT_ID)   
+				WHERE TA.DELETE_AT = 'N'
+			)
+			SELECT TC.NTT_ID
+			FROM T_NTT_M01_T TC
+		) UTB
+		ON (UTA.NTT_ID = UTB.NTT_ID)
+		SET UTA.DELETE_AT = 'Y'
+			,UTA.UPDT_DE = NOW()
+			,UTA.UPDT_ID = #{updtId}
+		WHERE UTA.DELETE_AT = 'N'
+	</update>
+	
+	<select id="selectDepthInLastInnerOrdr" parameterType="nttVO" resultType="egovMap">
+		WITH RECURSIVE T_NTT_M01_T AS (
+			SELECT
+				UPPER_NTT_ID
+				,NTT_DP
+				,NTT_SJ
+				,NTT_INNER_ORDR
+				,NTT_ID
+			FROM T_NTT_M01
+			WHERE DELETE_AT = 'N'
+			  AND NTT_ID = #{upperNttId}
+			UNION ALL
+			SELECT
+			   TA.UPPER_NTT_ID
+			   ,TA.NTT_DP
+			   ,TA.NTT_SJ
+			   ,TA.NTT_INNER_ORDR
+			   ,TA.NTT_ID
+			FROM T_NTT_M01 TA
+			INNER JOIN T_NTT_M01_T TB
+			ON (TA.UPPER_NTT_ID = TB.NTT_ID)   
+			WHERE TA.DELETE_AT = 'N'
+		)
+		SELECT
+			UPPER_NTT_ID
+			, NTT_DP
+			, NTT_SJ
+			, NTT_INNER_ORDR
+			, NTT_ID
+		FROM T_NTT_M01_T TC
+		ORDER BY TC.NTT_INNER_ORDR DESC
+		LIMIT 1
+	</select>
+	
+	<update id="orderNttInnerOrdr" parameterType="nttVO">
+		<![CDATA[
+		UPDATE T_NTT_M01
+		SET NTT_INNER_ORDR = NTT_INNER_ORDR + 1
+		WHERE DELETE_AT = 'N' 
+		  AND NTT_INNER_ORDR >= #{nttInnerOrdr}
+		  AND NTT_ORDR = #{nttOrdr}
+		]]>  
+	</update>
+	
+	<insert id="insertHistoryNtt" parameterType="nttVO">
+		INSERT INTO T_NTT_H01
+		(
+			BBS_ID
+			,NTT_ID
+			,NTT_SJ
+			,NTT_CN
+			,NTT_RDCNT
+			,UPPER_NTT_ID
+			,ATCH_FILE_ID
+			,NTT_ORDR
+			,NTT_DP
+			,NTT_INNER_ORDR
+			,SECRET_AT
+			,SECRET_KEY
+			,NOTICE_AT
+			,LC_INDICT_AT
+			,ADRES
+			,ADRES_LA
+			,ADRES_LO
+			,POPUP_AT
+			,KOGL_TY
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+			,HIST_REGIST_DE
+		)
+		SELECT 
+			BBS_ID
+			,NTT_ID
+			,NTT_SJ
+			,NTT_CN
+			,NTT_RDCNT
+			,UPPER_NTT_ID
+			,ATCH_FILE_ID
+			,NTT_ORDR
+			,NTT_DP
+			,NTT_INNER_ORDR
+			,SECRET_AT
+			,SECRET_KEY
+			,NOTICE_AT
+			,LC_INDICT_AT
+			,ADRES
+			,ADRES_LA
+			,ADRES_LO
+			,POPUP_AT
+			,KOGL_TY
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+			,NOW() AS HIST_REGIST_DE
+  		FROM T_NTT_M01
+  		WHERE NTT_ID = #{nttId}
+	</insert>
+
+	<select id="selectNttListTotCntNonBbsId" resultType="int">
+		SELECT COUNT(*)
+		FROM T_NTT_M01 TA
+		INNER JOIN T_BBS_M01 TB
+		ON (TA.BBS_ID = TB.BBS_ID AND TB.DELETE_AT = 'N')
+		WHERE TA.DELETE_AT = 'N'
+	</select>
+
+</mapper>

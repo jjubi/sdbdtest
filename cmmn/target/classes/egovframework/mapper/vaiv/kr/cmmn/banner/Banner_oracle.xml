@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : Banner.xml 
+  * 상세설명 : 배너 데이터 핸들링
+  * 작성일시 : 2021. 03. 03
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * ********************************    
+  * 2021. 03. 03.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Banner">
+	<select id="selectBannerList" parameterType="bannerVO" resultType="bannerVO">
+		<include refid="cmmn.Common.common-paging-top"></include>
+		SELECT
+			BANNER_SEQ_NO AS bannerSeqNo
+			,BANNER_NM AS bannerNm
+			,BANNER_DC AS bannerDc
+			,BANNER_URL AS bannerUrl
+			,ATCH_FILE_ID AS atchFileId
+			,TO_CHAR(BANNER_BGNDE, 'YYYY-MM-DD') AS bannerBgnde
+			,TO_CHAR(BANNER_ENDDE, 'YYYY-MM-DD') AS bannerEndde
+			,BANNER_ORDR AS bannerOrdr
+			,BANNER_TY AS bannerTy
+			<include refid="cmmn.Common.common-column1"></include>
+			,CASE
+				WHEN <![CDATA[TO_CHAR(SYSDATE, 'YYYY-MM-DD') > TO_CHAR(BANNER_ENDDE, 'YYYY-MM-DD')]]> THEN 'N'
+				WHEN <![CDATA[TO_CHAR(SYSDATE, 'YYYY-MM-DD') < TO_CHAR(BANNER_BGNDE, 'YYYY-MM-DD')]]> THEN 'P'
+				ELSE 'U'
+			END AS bannerPdCheck
+		FROM T_BANNER_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND BANNER_NM LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test='bannerTy != null and bannerTy != ""'>
+       	  AND BANNER_TY = #{bannerTy}
+        </if>
+        <if test='useAt != null and useAt != ""'>
+       	  AND USE_AT = #{useAt}
+        </if>
+        <if test='pdCondition != null and pdCondition != ""'>
+       	  AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TO_CHAR(BANNER_BGNDE, 'YYYY-MM-DD') AND TO_CHAR(BANNER_ENDDE, 'YYYY-MM-DD')
+        </if>
+        <choose>
+        	<when test='ordrCondition == "ordr"'>
+        		ORDER BY BANNER_ORDR ASC
+        	</when>
+        	<otherwise>
+        		ORDER BY REGIST_DE DESC	
+        	</otherwise>
+        </choose>
+        <include refid="cmmn.Common.common-paging-bottom"></include>
+	</select>
+	
+	<select id="selectBannerListTotCnt" parameterType="bannerVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_BANNER_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND BANNER_NM LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test='bannerTy != null and bannerTy != ""'>
+       	  AND BANNER_TY = #{bannerTy}
+        </if>
+        <if test='useAt != null and useAt != ""'>
+       	  AND USE_AT = #{useAt}
+        </if>
+        <if test='pdCondition != null and pdCondition != ""'>
+       	  AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TO_CHAR(BANNER_BGNDE, 'YYYY-MM-DD') AND TO_CHAR(BANNER_ENDDE, 'YYYY-MM-DD')
+        </if>
+	</select>
+	
+	<insert id="insertBanner" parameterType="bannerVO">
+		INSERT INTO T_BANNER_M01
+		(
+			BANNER_SEQ_NO
+			,BANNER_NM
+			,BANNER_DC
+			,BANNER_URL
+			,ATCH_FILE_ID
+			,BANNER_BGNDE
+			,BANNER_ENDDE
+			,BANNER_ORDR
+			,BANNER_TY
+			,USE_AT
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+		)
+		VALUES
+		(
+			BANNER_M01_SEQ1.NEXTVAL
+			,#{bannerNm}
+			,#{bannerDc}
+			,#{bannerUrl}
+			,#{atchFileId}
+			,#{bannerBgnde}
+			,#{bannerEndde}
+			,#{bannerOrdr}
+			,#{bannerTy}
+			,#{useAt}
+			,'N'
+			,SYSDATE
+			,#{registId}
+			,SYSDATE
+			,#{updtId}
+		)
+	</insert>
+	
+	<select id="selectBanner" parameterType="bannerVO" resultType="bannerVO">
+		SELECT
+			BANNER_SEQ_NO AS bannerSeqNo
+			,BANNER_NM AS bannerNm
+			,BANNER_DC AS bannerDc
+			,BANNER_URL AS bannerUrl
+			,ATCH_FILE_ID AS atchFileId
+			,TO_CHAR(BANNER_BGNDE, 'YYYY-MM-DD') AS bannerBgnde
+			,TO_CHAR(BANNER_ENDDE, 'YYYY-MM-DD') AS bannerEndde
+			,BANNER_ORDR AS bannerOrdr
+			,BANNER_TY AS bannerTy
+			<include refid="cmmn.Common.common-column1"></include>
+		FROM T_BANNER_M01
+		WHERE DELETE_AT = 'N'
+		  AND BANNER_SEQ_NO = #{bannerSeqNo}
+	</select>
+	
+	<update id="updateBanner" parameterType="bannerVO">
+		UPDATE T_BANNER_M01
+		SET UPDT_DE = SYSDATE
+			,UPDT_ID = #{updtId}
+			,BANNER_NM = #{bannerNm}
+			,BANNER_DC = #{bannerDc}
+			,BANNER_URL = #{bannerUrl}
+			,ATCH_FILE_ID = #{atchFileId}
+			,BANNER_BGNDE = #{bannerBgnde}
+			,BANNER_ENDDE = #{bannerEndde}
+			,BANNER_ORDR = #{bannerOrdr}
+			,BANNER_TY = #{bannerTy}
+			,USE_AT = #{useAt}
+		WHERE DELETE_AT = 'N'
+		  AND BANNER_SEQ_NO = #{bannerSeqNo}
+	</update>
+	
+	<update id="deleteBanner" parameterType="bannerVO">
+		UPDATE T_BANNER_M01
+		SET UPDT_DE = SYSDATE
+			,UPDT_ID = #{updtId}
+			,DELETE_AT = 'Y'
+		WHERE DELETE_AT = 'N'
+		  AND BANNER_SEQ_NO = #{bannerSeqNo}
+	</update>
+	
+	<update id="updateBannerOrdr" parameterType="bannerVO">
+		UPDATE T_BANNER_M01
+		SET UPDT_DE = SYSDATE
+			,UPDT_ID = #{updtId}
+			,BANNER_ORDR = #{bannerOrdr}
+		WHERE DELETE_AT = 'N'
+		  AND BANNER_SEQ_NO = #{bannerSeqNo}
+	</update>
+
+	<update id="updateBannerUseAt" parameterType="bannerVO">
+		UPDATE T_BANNER_M01
+		SET UPDT_DE = SYSDATE
+			,UPDT_ID = #{updtId}
+			,USE_AT = #{useAt}
+		WHERE DELETE_AT = 'N'
+		  AND BANNER_SEQ_NO = #{bannerSeqNo}	
+	</update>
+
+</mapper>
+
+
+
+
+
+
+
+
+

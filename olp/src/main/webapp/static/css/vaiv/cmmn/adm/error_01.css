@@ -1,0 +1,43 @@
+@charset "UTF-8";
+
+html, body{height: 100%; margin: 0; padding: 0;}
+
+.error_wrap {position: relative;width: 100%;height: 100%;background: url(./../../../../images/vaiv/cmmn/com/error_bg.png) #d7e4f7 no-repeat center;margin: 0 auto;background-size: cover;overflow-x: hidden;}
+.error_wrap  .logo {position: absolute;top: 30px;left: 60px;width: 225px;height: 77px;background: url(./../../../../images/vaiv/cmmn/com/company_logo.png) no-repeat;}
+.error_wrap .logo a {display: block;width: 100%;height: 100%;font-size: 0;}
+.error_wrap .contBox{padding: 160px 0 130px 0;}
+.contBox .cont_inner{padding: 10px;}
+.contBox .cont_inner .error_img{text-align: center;}
+.contBox .cont_inner .error_img .tit {height: 46px;margin: 60px 0 20px 0;background: url(./../../../../images/vaiv/cmmn/com/error_txt.png) no-repeat center;font-size: 0;}
+.contBox .cont_inner .error_img .tit_02 {height: 82px;margin: 60px 0 20px 0;background: url(./../../../../images/vaiv/cmmn/com/restriction_txt_01.png) no-repeat center;font-size: 0;}
+.contBox .cont_inner .txt {margin: 0 0 28px 2px;line-height: 1.65;}
+.contBox .cont_inner .txt p {margin: 0;}
+.contBox .cont_inner .txt p span {display: block;font-size: 16px;color: #333;}
+.contBox .cont_inner .btn_wrap {margin: 30px 0 0px 0;font-size: 0;text-align: center;}
+.contBox .cont_inner .btn_wrap a {text-align: center;display: inline-block;width: 180px;line-height: 50px;border-radius: 25px;color: #fff;font-size: 18px;font-weight: 700;text-decoration: none;margin: 0 10px;-moz-transition: background, 0.2s;-o-transition: background, 0.2s;-webkit-transition: background, 0.2s;transition: background, 0.2s;}
+.contBox .cont_inner .btn_wrap a.btn1 {background: #083e88;}
+.contBox .cont_inner .btn_wrap a.btn2 {background: #fff; color: #083e88;}
+.contBox .cont_inner .btn_wrap a.btn1:hover, 
+.contBox .cont_inner .btn_wrap a.btn2:hover {background: #00aeef; color: #fff;}
+
+/*error_footer */
+.error_wrap .error_footer {width: 100%;text-align: center;}
+.error_wrap .error_footer p {font-size: 16px;color: #444;margin: 5px;}
+/*error_footer :End*/
+
+
+/*반응형*/
+@media (max-width: 768px) { 
+    .contBox .cont_inner .error_img .tit {height: 61px;margin: 40px 0;background: url(./../../../../images/vaiv/cmmn/com/error_txt_02.png) no-repeat center;font-size: 0;}
+    .contBox .cont_inner .error_img .tit_02 {height: 94px;margin: 60px 0 20px 0;background: url(./../../../../images/vaiv/cmmn/com/restriction_txt_02.png) no-repeat center;font-size: 0;}
+    .error_wrap .logo {left: 15px;top: 20px;width: 160px;height: 24px;background-size: 100%;}
+    .error_img > img{width: 70%;}
+}
+@media only screen and (max-width: 425px) {
+    .error_wrap .error_logo {text-align: center;}
+    .error_wrap .error_logo > h1 > img{height: 23px;}
+    .error_img > img{width: 100%;}
+    .contBox .cont_inner .btn_wrap a {display: block;width: 100%;border-radius: 25px;font-size: 16px;margin: 10px 0px;padding: 0;}
+    .error_wrap .contBox {padding: 110px 0 60px 0;}
+    .contBox .cont_inner .txt p span, .error_wrap .error_footer p {font-size: 14px;}
+/*반응형 :End*/

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+ 
+<tiles-definitions>
+    
+    <definition name="adm" template="/WEB-INF/tiles/layout/cmmn/adm/main.jsp">
+        <put-attribute name="title" value="CMS Basic" />
+        <put-attribute name="header" value="/WEB-INF/tiles/layout/cmmn/adm/header.jsp" />
+        <put-attribute name="left" value="/WEB-INF/tiles/layout/cmmn/adm/left.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/layout/cmmn/adm/footer.jsp" />
+    </definition>
+    
+   	<definition name="*/*/*/*/*/*/*.adm" extends="adm">
+		<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}/{5}/{6}/{7}.jsp" /> 
+    </definition>
+   	<definition name="*/*/*/*/*/*.adm" extends="adm">
+		<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}/{5}/{6}.jsp" /> 
+    </definition>
+   	<definition name="*/*/*/*/*.adm" extends="adm">
+		<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}/{5}.jsp" /> 
+    </definition>
+   	<definition name="*/*/*/*.adm" extends="adm">
+		<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}.jsp" /> 
+    </definition>
+   	<definition name="*/*/*.adm" extends="adm">
+		<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}.jsp" /> 
+    </definition>
+    
+    <definition name="usr" template="/WEB-INF/tiles/layout/cmmn/usr/main.jsp">
+        <put-attribute name="title" value="CMS Basic" />
+        <put-attribute name="header" value="/WEB-INF/tiles/layout/cmmn/usr/header.jsp" />
+        <put-attribute name="left" value="/WEB-INF/tiles/layout/cmmn/usr/left.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/layout/cmmn/usr/footer.jsp" />
+    </definition>
+    
+   	<definition name="*/*/*/*/*/*/*.usr" extends="usr">
+		<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}/{5}/{6}/{7}.jsp" /> 
+    </definition>
+   	<definition name="*/*/*/*/*/*.usr" extends="usr">
+		<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}/{5}/{6}.jsp" /> 
+    </definition>
+   	<definition name="*/*/*/*/*.usr" extends="usr">
+		<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}/{5}.jsp" /> 
+    </definition>
+   	<definition name="*/*/*/*.usr" extends="usr">
+		<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}.jsp" /> 
+    </definition>
+   	<definition name="*/*/*.usr" extends="usr">
+		<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}.jsp" /> 
+    </definition>
+
+	<definition name="design" template="/WEB-INF/tiles/layout/cmmn/adm/main.jsp">
+        <put-attribute name="title" value="CMS Basic" />
+        <put-attribute name="header" value="/WEB-INF/tiles/layout/cmmn/adm/header.jsp" />
+        <put-attribute name="left" value="/WEB-INF/tiles/layout/cmmn/adm/left.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/layout/cmmn/adm/footer.jsp" />
+    </definition>
+    
+   	<definition name="*/*/*/*/*/*/*.design" extends="design">
+		<put-attribute name="content" value="/static/html/designSample/{2}/{3}/{4}/{5}/{6}/{7}.{1}" /> 
+    </definition>
+   	<definition name="*/*/*/*/*/*.design" extends="design">
+		<put-attribute name="content" value="/static/html/designSample/{2}/{3}/{4}/{5}/{6}.{1}" /> 
+    </definition>
+   	<definition name="*/*/*/*/*.design" extends="design">
+		<put-attribute name="content" value="/static/html/designSample/{2}/{3}/{4}/{5}.{1}" /> 
+    </definition>
+   	<definition name="*/*/*/*.design" extends="design">
+		<put-attribute name="content" value="/static/html/designSample/{2}/{3}/{4}.{1}" /> 
+    </definition>
+   	<definition name="*/*/*.design" extends="design">
+		<put-attribute name="content" value="/static/html/designSample/{2}/{3}.{1}" />
+    </definition>
+   	<definition name="*/*.design" extends="design">
+		<put-attribute name="content" value="/static/html/designSample/{2}.{1}" /> 
+    </definition>
+
+</tiles-definitions> 

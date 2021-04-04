@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- 
+  * Xml Name : Bbs.xml 
+  * 상세설명 : 게시판 데이터 핸들링
+  * 작성일시 : 2021. 03. 03
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2021. 03. 03.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Bbs">
+	<select id="selectBbsList" parameterType="bbsSearchVO" resultType="bbsVO">
+		<include refid="cmmn.Common.common-paging-top"></include>
+		SELECT
+			TA.BBS_TY_ID AS bbsTyId
+			,TB.BBS_TY_NM AS bbsTyNm
+			,TA.BBS_ID AS bbsId
+			,TA.BBS_NM AS bbsNm
+			,TA.BBS_DC AS bbsDc
+			,TA.BBS_PD_USE_AT AS bbsPdUseAt
+			,TO_CHAR(TA.BBS_PD_BGNDE, 'YYYY-MM-DD') AS bbsPdBgnde
+			,TO_CHAR(TA.BBS_PD_ENDDE, 'YYYY-MM-DD') AS bbsPdEndde
+			,TA.USE_AT AS useAt
+			,TO_CHAR(TA.REGIST_DE, 'YYYY-MM-DD') AS registDe
+			,TA.REGIST_ID AS registId
+			,TO_CHAR(TA.UPDT_DE, 'YYYY-MM-DD') AS updtDe
+			,TA.UPDT_ID AS updtId
+		FROM T_BBS_M01 TA
+		INNER JOIN T_BBS_TY_M01 TB
+		ON (TA.BBS_TY_ID = TB.BBS_TY_ID AND TB.DELETE_AT = 'N' AND TB.USE_AT = 'Y')
+		WHERE TA.DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND TA.BBS_ID LIKE '%' || #{searchKeyword} || '%'
+        </if>
+		<if test="searchCondition == 2">
+		  AND TA.BBS_NM LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test="searchCondition == 3">
+		  AND TB.BBS_TY_NM LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test="searchCondition == 5">
+          AND TA.USE_AT = #{searchKeyword}
+        </if>
+        ORDER BY TA.REGIST_DE DESC
+        <include refid="cmmn.Common.common-paging-bottom"></include>
+	</select>
+	
+	<select id="selectBbsListTotCnt" parameterType="bbsSearchVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_BBS_M01 TA
+		INNER JOIN T_BBS_TY_M01 TB
+		ON (TA.BBS_TY_ID = TB.BBS_TY_ID AND TB.DELETE_AT = 'N')
+		WHERE TA.DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND TA.BBS_ID LIKE '%' || #{searchKeyword} || '%'
+        </if>
+		<if test="searchCondition == 2">
+		  AND TA.BBS_NM LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test="searchCondition == 3">
+		  AND TB.BBS_TY_NM LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test="searchCondition == 5">
+          AND TA.USE_AT = #{searchKeyword}
+        </if>
+	</select>
+	
+	<insert id="insertBbs" parameterType="bbsVO">
+		INSERT INTO T_BBS_M01
+		(
+			BBS_TY_ID
+			,BBS_ID
+			,BBS_NM
+			,BBS_DC
+			,BBS_PD_USE_AT
+			,BBS_PD_BGNDE
+			,BBS_PD_ENDDE
+			,USE_AT
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+		)
+		VALUES
+		(
+			#{bbsTyId}
+			,#{bbsId}
+			,#{bbsNm}
+			,#{bbsDc}
+			,#{bbsPdUseAt}
+			,#{bbsPdBgnde, jdbcType=DATE}
+			,#{bbsPdEndde, jdbcType=DATE}
+			,#{useAt}
+			,'N'
+			,SYSDATE
+			,#{registId}
+			,SYSDATE
+			,#{updtId}
+		)
+	</insert>
+	
+	<select id="selectBbs" parameterType="bbsVO" resultType="bbsVO">
+		SELECT
+			TA.BBS_TY_ID AS bbsTyId
+			,TB.BBS_TY_NM AS bbsTyNm
+			,TA.BBS_ID AS bbsId
+			,TA.BBS_NM AS bbsNm
+			,TA.BBS_DC AS bbsDc
+			,TA.BBS_PD_USE_AT AS bbsPdUseAt
+			,TO_CHAR(TA.BBS_PD_BGNDE, 'YYYY-MM-DD') AS bbsPdBgnde
+			,TO_CHAR(TA.BBS_PD_ENDDE, 'YYYY-MM-DD') AS bbsPdEndde
+			,TA.USE_AT AS useAt
+			,TO_CHAR(TA.REGIST_DE, 'YYYY-MM-DD') AS registDe
+			,TA.REGIST_ID AS registId
+			,TO_CHAR(TA.UPDT_DE, 'YYYY-MM-DD') AS updtDe
+			,TA.UPDT_ID AS updtId
+		FROM T_BBS_M01 TA
+		INNER JOIN T_BBS_TY_M01 TB
+		ON (TA.BBS_TY_ID = TB.BBS_TY_ID AND TB.DELETE_AT = 'N')
+		WHERE TA.DELETE_AT = 'N'
+		  AND TA.BBS_ID = #{bbsId}
+	</select>
+
+	<update id="updateBbs" parameterType="bbsVO">
+		UPDATE T_BBS_M01 
+		SET UPDT_DE = SYSDATE
+			,UPDT_ID = #{updtId}
+			,BBS_TY_ID = #{bbsTyId}
+			,BBS_NM = #{bbsNm}
+			,BBS_DC = #{bbsDc}
+			,BBS_PD_USE_AT = #{bbsPdUseAt}
+			,BBS_PD_BGNDE = #{bbsPdBgnde, jdbcType=DATE}
+			,BBS_PD_ENDDE = #{bbsPdEndde, jdbcType=DATE}
+			,USE_AT = #{useAt}
+		WHERE DELETE_AT = 'N'
+		  AND BBS_ID  = #{bbsId}
+	</update>
+	
+	<update id="deleteBbs" parameterType="bbsVO">
+		UPDATE T_BBS_M01
+		SET	UPDT_DE = SYSDATE
+			,UPDT_ID = #{updtId}
+			,DELETE_AT = 'Y'
+		WHERE DELETE_AT = 'N'
+		  AND BBS_ID = #{bbsId}
+	</update>
+
+
+</mapper>
+
+
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC 
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN" 
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+	<formset>
+        <form name="qestnarVO">
+            <field property="qestnarNm" depends="required, maxlength">
+                <arg0 key="설문조사 명" resource="true"/>
+                <arg1 key="100" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>100</var-value>
+				</var>
+            </field>
+            <field property="qestnarBgnde" depends="required">
+                <arg0 key="설문조사 시작일" resource="true"/>
+            </field>
+            <field property="qestnarEndde" depends="required">
+                <arg0 key="설문조사 종료일" resource="true"/>
+            </field>
+            
+        </form>
+    </formset>
+    
+</form-validation>

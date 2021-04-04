@@ -1,0 +1,12 @@
+{
+"getUltraSrtNcst" : 
+	{
+		"url" : "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst",
+		"serviceKey" : "%2BBmKG0a4KzSsYn22pdZmuO7lNgr0fW7ObnXEiCaW7SPTv6ZJTvkYYod9j3yhEn5hmpzoGWa%2F9Dkbh4BpNxfo1Q%3D%3D",
+		"numOfRows" : "10",
+		"pageNo" : "1",
+		"dataType" : "JSON",
+		"nx" : "59",
+		"ny" : "125"
+	}
+}

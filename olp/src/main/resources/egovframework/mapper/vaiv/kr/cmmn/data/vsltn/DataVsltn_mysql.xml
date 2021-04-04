@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : DataVsltn.xml 
+  * 상세설명 : 데이터 시각화 데이터 핸들링 기능
+  * 작성일시 : 2021. 03. 24
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2021. 03. 24.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.DataVsltn">
+    <insert id="insertDataVsltnCnrs" parameterType="dataVsltnCnrsVO">
+       INSERT INTO T_DATA_VSLTN_CNRS_M01
+       (
+           VSLTN_TY
+           ,VSLTN_ORIGNL_FILE_ID
+           ,VSLTN_OPTN
+           ,VSLTN_URL_KEY
+           ,VSLTN_CNRS_NM
+           ,USE_AT
+           ,REGIST_DE
+           ,REGIST_ID
+           ,UPDT_DE
+           ,UPDT_ID    
+       )
+       VALUES
+       (
+           #{vsltnTy}
+           ,#{vsltnOrignlFileId}
+           ,#{vsltnOptn}
+           ,#{vsltnUrlKey}
+           ,#{vsltnCnrsNm}
+           ,'Y'
+           ,NOW()
+           ,#{registId}
+           ,NOW()
+           ,#{updtId}      
+       )
+    </insert>
+    
+    <select id="selectDataVsltnCnrs" parameterType="dataVsltnCnrsVO" resultType="dataVsltnCnrsVO">
+        SELECT
+            TA.VSLTN_CNRS_SEQ_NO AS vsltnCnrsSeqNo
+            ,TA.VSLTN_TY AS vsltnTy
+            ,TA.VSLTN_ORIGNL_FILE_ID AS vsltnOrignlFileId
+            ,TB.ORIGNL_FILE_NM AS vsltnOrignlFileNm
+            ,TA.VSLTN_OPTN AS vsltnOptn
+            ,TA.VSLTN_URL_KEY AS vsltnUrlKey
+            ,TA.VSLTN_CNRS_NM AS vsltnCnrsNm
+            ,TA.USE_AT AS useAt
+            ,DATE_FORMAT(TA.REGIST_DE, '%Y-%m-%d') AS registDe
+            ,TA.REGIST_ID AS registId
+            ,DATE_FORMAT(TA.UPDT_DE, '%Y-%m-%d') AS updtDe
+            ,TA.UPDT_ID AS updtId
+        FROM T_DATA_VSLTN_CNRS_M01 TA
+        LEFT OUTER JOIN COMTNFILEDETAIL TB
+        ON (TA.VSLTN_ORIGNL_FILE_ID = TB.ATCH_FILE_ID AND TB.FILE_SN = 0)
+        WHERE 1=1
+        <if test='useAt != null and useAt != ""'>
+            AND USE_AT = #{useAt}
+        </if>
+        <if test='vsltnUrlKey != null and vsltnUrlKey != ""'>
+            AND VSLTN_URL_KEY = #{vsltnUrlKey}
+        </if>
+    </select>
+
+</mapper>
+
+
+
+

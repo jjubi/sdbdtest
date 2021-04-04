@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : BbsTy.xml 
+  * 상세설명 : 게시판 유형 데이터 핸들링
+  * 작성일시 : 2020. 12. 31
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2020. 12. 31.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.BbsTy">
+	<select id="selectBbsTyList" parameterType="bbsSearchVO" resultType="bbsTyVO">
+		SELECT
+			BBS_TY_ID AS bbsTyId
+			,BBS_TY_NM AS bbsTyNm
+			,BBS_TY_CODE AS bbsTyCode
+			,BBS_TY_DC AS bbsTyDc
+			<include refid="cmmn.Common.common-column1"></include>
+		FROM T_BBS_TY_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND BBS_TY_ID LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 2">
+		  AND BBS_TY_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 3">
+		  AND BBS_TY_CODE LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 4">
+		  AND USE_AT = #{searchKeyword}
+        </if>
+        ORDER BY REGIST_DE DESC
+        <include refid="cmmn.Common.common-paging"></include>
+	</select>
+	
+	<select id="selectBbsTyListTotCnt" parameterType="bbsSearchVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_BBS_TY_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND BBS_TY_ID LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+        <if test="searchCondition == 2">
+		  AND BBS_TY_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+        <if test="searchCondition == 3">
+		  AND BBS_TY_CODE LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+	</select>
+	
+	<insert id="insertBbsTy" parameterType="bbsTyVO">
+		INSERT INTO T_BBS_TY_M01
+		(
+			BBS_TY_ID
+			,BBS_TY_CODE
+			,BBS_TY_NM
+			,BBS_TY_DC
+			,USE_AT
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+		)
+		VALUES
+		(
+			#{bbsTyId}
+			,#{bbsTyCode}
+			,#{bbsTyNm}
+			,#{bbsTyDc}
+			,#{useAt}
+			,'N'
+			,NOW()
+			,#{registId}
+			,NOW()
+			,#{updtId}
+		)
+	</insert>
+	
+	<select id="selectBbsTy" parameterType="bbsSearchVO" resultType="bbsTyVO">
+		SELECT
+			BBS_TY_ID AS bbsTyId
+			,BBS_TY_CODE AS bbsTyCode
+			,BBS_TY_NM AS bbsTyNm
+			,BBS_TY_DC AS bbsTyDc
+			<include refid="cmmn.Common.common-column1"></include>
+		FROM T_BBS_TY_M01
+		WHERE DELETE_AT = 'N'
+		  AND BBS_TY_ID = #{bbsTyId}
+	</select>
+	
+	<update id="updateBbsTy" parameterType="bbsTyVO">
+		UPDATE T_BBS_TY_M01
+		SET	BBS_TY_NM = #{bbsTyNm}
+			,BBS_TY_CODE = #{bbsTyCode}
+			,BBS_TY_DC = #{bbsTyDc}
+			,USE_AT = #{useAt}
+			,UPDT_DE = NOW()
+			,UPDT_ID = #{updtId}
+		WHERE DELETE_AT = 'N'
+		  AND BBS_TY_ID = #{bbsTyId}		
+	</update>
+	
+	<update id="deleteBbsTy" parameterType="bbsTyVO">
+		UPDATE T_BBS_TY_M01
+		SET	DELETE_AT = 'Y'
+			,UPDT_DE = NOW()
+			,UPDT_ID = #{updtId}
+		WHERE DELETE_AT = 'N'
+		  AND BBS_TY_ID = #{bbsTyId}		
+	</update> 
+	
+	<select id="checkBbsTyCode" parameterType="bbsSearchVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_BBS_TY_M01
+		WHERE DELETE_AT = 'N'
+		  AND BBS_TY_CODE = #{bbsTyCode}
+		<if test='bbsTyId != null and bbsTyId != ""'>
+		  AND BBS_TY_ID != #{bbsTyId}
+	  </if>	
+	</select>
+	
+</mapper>

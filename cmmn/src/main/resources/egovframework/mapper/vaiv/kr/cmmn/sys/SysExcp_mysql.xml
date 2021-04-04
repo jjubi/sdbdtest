@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : sysExcp.xml 
+  * 상세설명 : 예외 발생 관리
+  * 작성일시 : 2021. 01. 21.
+  * 작 성 자  : kmk
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2021. 01. 21.    kmk     최초등록
+  *
+  * 
+ -->
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.sysExcp">
+	<resultMap id="sysExcp" type="egovframework.vaiv.kr.cmmn.sys.excp.service.SysExcpVO" >
+		<result property="exceptionSeqNo" column="EXCEPTION_SEQ_NO"/>
+		<result property="exceptionNm" column="EXCEPTION_NM"/>
+		<result property="exceptionContent" column="EXCEPTION_CN"/>
+		<result property="exceptionClass" column="EXCEPTION_CLASS"/>
+		<result property="exceptionMethod" column="EXCEPTION_METHOD"/>
+		<result property="registDe" column="REGIST_DE"/>
+	</resultMap>
+	
+	<select id="selectSysExcpList" parameterType="sysExcpVO" resultMap="sysExcp">
+		SELECT
+			EXCEPTION_SEQ_NO
+			, EXCEPTION_NM
+			, EXCEPTION_CN
+			, EXCEPTION_CLASS
+			, EXCEPTION_METHOD
+			, REGIST_DE
+		FROM
+			T_EXCEPTION_LOG_M01
+		WHERE 1=1
+		<if test="searchCondition == 1">
+		  AND EXCEPTION_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 2">
+		  AND EXCEPTION_CLASS LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 3">
+		  AND EXCEPTION_METHOD LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 4">
+		  AND EXCEPTION_CN LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+        ORDER BY REGIST_DE DESC
+        <include refid="cmmn.Common.common-paging"></include>
+	</select>
+	
+	<select id="selectSysExcpListTotCnt" parameterType="sysExcpVO" resultType="int">
+		SELECT
+			COUNT(EXCEPTION_SEQ_NO) AS cnt
+		FROM
+			T_EXCEPTION_LOG_M01
+		WHERE 1=1
+		<if test="searchCondition == 1">
+		  AND EXCEPTION_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 2">
+		  AND EXCEPTION_CLASS LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 3">
+		  AND EXCEPTION_METHOD LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 4">
+		  AND EXCEPTION_CN LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+	</select>
+	
+	<insert id="insertSysExcp" parameterType="sysExcpVO">
+		INSERT INTO T_EXCEPTION_LOG_M01
+		(
+			EXCEPTION_NM
+			, EXCEPTION_CN
+			, EXCEPTION_CLASS
+			, EXCEPTION_METHOD
+			, REGIST_DE
+		)
+		VALUES
+		(
+			#{exceptionNm}
+			, #{exceptionContent}
+			, #{exceptionClass}
+			, #{exceptionMethod}
+			, NOW()
+		)
+	</insert>
+	
+	<select id="selectSysExcp" parameterType="sysExcpVO" resultMap="sysExcp">
+		SELECT
+			EXCEPTION_SEQ_NO
+			, EXCEPTION_NM
+			, EXCEPTION_CN
+			, EXCEPTION_CLASS
+			, EXCEPTION_METHOD
+			, REGIST_DE
+		FROM
+			T_EXCEPTION_LOG_M01
+		WHERE 1=1
+		AND EXCEPTION_SEQ_NO = #{exceptionSeqNo}
+	</select>
+</mapper>

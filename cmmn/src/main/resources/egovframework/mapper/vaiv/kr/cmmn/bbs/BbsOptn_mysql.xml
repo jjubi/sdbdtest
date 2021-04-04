@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : BbsOptn.xml 
+  * 상세설명 : 게시판 옵션 데이터 핸들링
+  * 작성일시 : 2020. 12. 31
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2020. 12. 31.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.BbsOptn">
+	<insert id="insertBbsOptn" parameterType="bbsOptnVO">
+		INSERT INTO T_BBS_OPTN_M01
+		(
+			BBS_ID
+			,POPUP_USE_AT
+			,ATCH_FILE_USE_AT
+			,ATCH_FILE_PERM_EXTSN
+			,ATCH_FILE_PERM_MXMM_CNT
+			,ANSWER_USE_AT
+			,CMT_USE_AT
+			,SECRET_USE_AT
+			,NOTICE_USE_AT
+			,LC_INDICT_USE_AT
+			,CCL_USE_AT	
+			,KOGL_USE_AT		
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+		)
+		VALUES
+		(
+			#{bbsId}
+			,#{popupUseAt}
+			,#{atchFileUseAt}
+			,#{atchFilePermExtsn}
+			,#{atchFilePermMxmmCnt}
+			,#{answerUseAt}
+			,#{cmtUseAt}
+			,#{secretUseAt}
+			,#{noticeUseAt}
+			,#{lcIndictUseAt}
+			,#{cclUseAt}		
+			,#{koglUseAt}
+			,'N'
+			,NOW()
+			,#{registId}
+			,NOW()
+			,#{updtId}		
+		)
+	</insert>
+
+	<select id="selectBbsOptn" parameterType="bbsSearchVO" resultType="bbsOptnVO">
+		SELECT
+			BBS_ID AS bbsId
+			,POPUP_USE_AT AS popupUseAt
+			,ATCH_FILE_USE_AT AS atchFileUseAt
+			,ATCH_FILE_PERM_EXTSN AS atchFilePermExtsn
+			,ATCH_FILE_PERM_MXMM_CNT AS atchFilePermMxmmCnt
+			,ANSWER_USE_AT AS answerUseAt
+			,CMT_USE_AT AS cmtUseAt
+			,SECRET_USE_AT AS secretUseAt
+			,NOTICE_USE_AT AS noticeUseAt
+			,LC_INDICT_USE_AT AS lcIndictUseAt
+			,CCL_USE_AT AS cclUseAt
+			,KOGL_USE_AT AS koglUseAt
+			,DATE_FORMAT(REGIST_DE, '%Y-%m-%d') AS registDe
+			,REGIST_ID AS registId
+			,DATE_FORMAT(UPDT_DE, '%Y-%m-%d') AS updtDe
+			,UPDT_ID AS updtId
+		FROM T_BBS_OPTN_M01
+		WHERE DELETE_AT = 'N'
+		  AND BBS_ID = #{bbsId}
+	</select>
+	
+	<update id="updateBbsOptn" parameterType="bbsOptnVO">
+		UPDATE T_BBS_OPTN_M01
+		SET POPUP_USE_AT = #{popupUseAt}
+			,ATCH_FILE_USE_AT = #{atchFileUseAt}
+			,ATCH_FILE_PERM_EXTSN = #{atchFilePermExtsn}
+			,ATCH_FILE_PERM_MXMM_CNT = #{atchFilePermMxmmCnt}
+			,ANSWER_USE_AT = #{answerUseAt}
+			,CMT_USE_AT = #{cmtUseAt}
+			,SECRET_USE_AT = #{secretUseAt}
+			,NOTICE_USE_AT = #{noticeUseAt}
+			,LC_INDICT_USE_AT = #{lcIndictUseAt}
+			,CCL_USE_AT = #{cclUseAt}
+			,KOGL_USE_AT = #{koglUseAt}
+			,UPDT_DE = NOW()
+			,UPDT_ID  = #{updtId}
+		WHERE DELETE_AT = 'N'
+		  AND BBS_ID = #{bbsId}
+	</update>
+
+</mapper>

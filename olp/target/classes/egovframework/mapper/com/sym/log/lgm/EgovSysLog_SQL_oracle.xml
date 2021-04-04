@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- 
+	수정일                 수정자                          수정내용
+  =========     =======    =================================================
+  2011.10.17   	서준식     	 	OCCRRNC_DE 컬럼과 날짜 비교문에 RTRIM 함수 적용
+  2017.09.19		이정은			날짜로 검색 시 시분초 추가, 로그삭제기한 210일 -> 6개월로 변경
+
+--><!--Converted at: Wed May 11 15:50:41 KST 2016-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysLog">
+
+	<!-- 시스템로그 맵 -->
+	<resultMap id="SysLogVO" type="egovframework.com.sym.log.lgm.service.SysLog">
+		<result property="requstId" column="REQUST_ID"/>
+		<result property="occrrncDe" column="OCCRRNC_DE"/>
+		<result property="srvcNm" column="SVC_NM"/>
+		<result property="methodNm" column="METHOD_NM"/>
+		<result property="processSeCode" column="PROCESS_SE_CODE"/>
+		<result property="processSeCodeNm" column="PROCESS_SE_CODE_NM"/>
+		<result property="processTime" column="PROCESS_TIME"/>
+		<result property="rqesterIp" column="RQESTER_IP"/>
+		<result property="rqesterId" column="RQESTER_ID"/>
+		<result property="rqsterNm" column="RQESTER_NM"/>
+	</resultMap>
+
+	<!-- 시스템 로그 등록 -->
+	<insert id="logInsertSysLog" parameterType="egovframework.com.sym.log.lgm.service.SysLog">
+		<![CDATA[
+			INSERT INTO COMTNSYSLOG 
+				( REQUST_ID
+				  , JOB_SE_CODE
+				  , TRGET_MENU_NM
+				  , SVC_NM
+				  , METHOD_NM
+				  , PROCESS_SE_CODE
+				  , PROCESS_TIME
+				  , RQESTER_ID
+				  , RQESTER_IP
+				  , OCCRRNC_DE
+				  , ERROR_SE
+				  , ERROR_CO
+				  , ERROR_CODE
+				  , REQUST_URI
+				  , REQUST_DOMN )
+			VALUES ( #{requstId}
+				  , #{jobSeCode}
+				  , #{trgetMenuNm}
+				  , #{srvcNm}
+				  , #{methodNm}
+				  , #{processSeCode}
+				  , #{processTime}
+				  , #{rqesterId}
+				  , #{rqesterIp}
+				  , SYSDATE
+				  , #{errorSe}
+				  , #{errorCo}
+				  , #{errorCode, jdbcType=VARCHAR}
+				  , #{requstUri}
+				  , #{requstDomn})
+		]]>
+	</insert>
+
+	<!-- 시스템 로그 상세 조회 -->
+	<select id="selectSysLog" parameterType="egovframework.com.sym.log.lgm.service.SysLog" resultMap="SysLogVO">
+		<![CDATA[
+			SELECT 
+				  a.REQUST_ID
+				, a.OCCRRNC_DE
+				, a.SVC_NM
+				, a.METHOD_NM
+				, a.PROCESS_SE_CODE
+				, c.CODE_NM AS PROCESS_SE_CODE_NM
+				, a.PROCESS_TIME
+				, a.RQESTER_IP
+				, a.RQESTER_ID
+				, b.USER_NM AS RQESTER_NM
+			FROM
+				COMTNSYSLOG a
+			LEFT OUTER JOIN COMVNUSERMASTER b
+				ON a.RQESTER_ID = b.ESNTL_ID
+			LEFT OUTER JOIN T_CMMN_CODE_M01 c
+				ON (a.PROCESS_SE_CODE = c.CODE AND c.GROUP_CODE = 'SYS_PROCESS_SE')
+			WHERE a.REQUST_ID = #{requstId}
+			]]>
+	</select>
+
+	<!-- 시스템 로그 목록 조회 -->
+	<select id="selectSysLogInf" parameterType="egovframework.com.sym.log.lgm.service.SysLog" resultMap="SysLogVO">
+		<![CDATA[
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT 
+				  a.REQUST_ID
+				, a.OCCRRNC_DE
+				, a.SVC_NM
+				, a.METHOD_NM
+				, a.PROCESS_SE_CODE
+				, c.CODE_NM AS PROCESS_SE_CODE_NM
+				, a.PROCESS_TIME
+				, a.RQESTER_IP
+				, a.RQESTER_ID
+				, b.USER_NM AS RQESTER_NM
+			FROM
+				COMTNSYSLOG a
+			LEFT OUTER JOIN COMVNUSERMASTER b
+				ON (a.RQESTER_ID = b.ESNTL_ID)
+			LEFT OUTER JOIN T_CMMN_CODE_M01 c
+				ON (a.PROCESS_SE_CODE = c.CODE AND c.GROUP_CODE = 'SYS_PROCESS_SE')
+			WHERE 1=1
+				]]>
+			
+		<if test="searchWrd != null and searchWrd != ''">	<![CDATA[	AND
+					c.CODE_NM LIKE '%' || #{searchWrd} || '%' 	]]>
+		</if>
+		<if test="searchBgnDe != null and searchBgnDe != ''">	<![CDATA[	AND
+					a.OCCRRNC_DE BETWEEN TO_DATE(CONCAT(#{searchBgnDe},' 00:00:00'),'YYYY-MM-DD HH24:MI:SS') 
+													AND TO_DATE(CONCAT(#{searchEndDe},' 23:59:59'),'YYYY-MM-DD HH24:MI:SS') 	]]>
+		</if>
+		<![CDATA[
+			ORDER BY a.OCCRRNC_DE DESC
+			) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}	]]>
+		
+	</select>
+
+	<!-- 시스템 로그 총건수 -->
+	<select id="selectSysLogInfCnt" parameterType="egovframework.com.sym.log.lgm.service.SysLog" resultType="java.lang.Integer">
+		
+		<![CDATA[
+			SELECT COUNT(a.REQUST_ID) as cnt
+			FROM
+				COMTNSYSLOG a
+			LEFT OUTER JOIN COMVNUSERMASTER b
+				ON a.RQESTER_ID = b.ESNTL_ID
+			LEFT OUTER JOIN T_CMMN_CODE_M01 c
+				ON (a.PROCESS_SE_CODE = c.CODE AND c.GROUP_CODE = 'SYS_PROCESS_SE')
+			WHERE 1=1
+				]]>
+			
+		<if test="searchWrd != null and searchWrd != ''">	<![CDATA[	AND
+				 	c.CODE_NM LIKE '%' || #{searchWrd} || '%'  ]]>
+		</if>
+		<if test="searchBgnDe != null and searchBgnDe != ''">	<![CDATA[	AND
+				 	a.OCCRRNC_DE BETWEEN TO_DATE(CONCAT(#{searchBgnDe},' 00:00:00'),'YYYY-MM-DD HH24:MI:SS') 
+													AND TO_DATE(CONCAT(#{searchEndDe},' 23:59:59'),'YYYY-MM-DD HH24:MI:SS')   ]]>
+		</if>
+	</select>
+
+	<!-- 시스템 로그 전날 로그 요약  등록 -->
+	<insert id="logInsertSysLogSummary">
+		INSERT INTO COMTSSYSLOGSUMMARY		    
+		SELECT Z.OCCRRNC_DE
+		      , Z.SVC_NM
+		      , Z.METHOD_NM
+		      , Z.REQUST_URI
+		      , Z.CREAT_CO           
+		      , Z.UPDT_CO
+		      , Z.RDCNT
+		      , Z.DELETE_CO
+		      , Z.OUTPT_CO
+		      , Z.ERROR_CO
+		      , Z.MENU_CO
+		      , CASE WHEN Z.PROCESS_SE_CODE = 'PC_M' AND Z.TRGET_MENU_NM IS NOT NULL THEN 'Y' ELSE 'N' END AS MENU_AT
+		      , CASE WHEN Z.PROCESS_SE_CODE = 'PC_M' AND Z.TRGET_MENU_NM IS NOT NULL THEN Z.TRGET_MENU_NM ELSE 'SVC' END AS MENU_NM
+		FROM (
+			SELECT TO_CHAR(b.OCCRRNC_DE,'YYYYMMDD') AS OCCRRNC_DE
+			     , b.SVC_NM
+			     , b.METHOD_NM
+			     , b.REQUST_URI
+			     , SUM(CASE WHEN b.PROCESS_SE_CODE = 'PS_C' THEN 1 ELSE 0 END) AS CREAT_CO
+			     , SUM(CASE WHEN b.PROCESS_SE_CODE = 'PS_U' THEN 1 ELSE 0 END) AS UPDT_CO
+			     , SUM(CASE WHEN b.PROCESS_SE_CODE = 'PS_R' THEN 1 ELSE 0 END) AS RDCNT
+			     , SUM(CASE WHEN b.PROCESS_SE_CODE = 'PS_D' THEN 1 ELSE 0 END) AS DELETE_CO
+			     , 0 AS OUTPT_CO
+			     , SUM(b.ERROR_CO) AS ERROR_CO
+			     , SUM(CASE WHEN b.PROCESS_SE_CODE = 'PC_M' AND b.TRGET_MENU_NM IS NOT NULL THEN 1 ELSE 0 END) AS MENU_CO
+		         , b.PROCESS_SE_CODE
+		         , b.TRGET_MENU_NM			     
+			  FROM COMTNSYSLOG b
+			 WHERE NOT EXISTS (
+			 		SELECT c.OCCRRNC_DE
+                    FROM COMTSSYSLOGSUMMARY c
+                    WHERE c.OCCRRNC_DE = TO_CHAR((SYSDATE - 1), 'YYYYMMDD')
+                  )
+			   AND TO_CHAR(b.OCCRRNC_DE, 'YYYYMMDD') = TO_CHAR((SYSDATE - 1), 'YYYYMMDD')
+			 GROUP BY TO_CHAR(b.OCCRRNC_DE,'YYYYMMDD')
+				    , b.SVC_NM
+				    , b.METHOD_NM
+				    , b.REQUST_URI
+		            , b.PROCESS_SE_CODE
+		            , b.TRGET_MENU_NM
+		) Z
+	</insert>
+
+	<!-- 시스템 로그 6개월전 로그 삭제 -->
+	<delete id="logDeleteSysLogSummary">
+		
+		<![CDATA[
+			DELETE FROM COMTNSYSLOG
+			 WHERE TO_CHAR(OCCRRNC_DE, 'YYYY-MM-DD') < TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYY-MM-DD')
+		]]>
+		
+	</delete>
+	
+	<select id="selectSysLogAllList" resultType="egovMap">
+		SELECT 
+			REQUST_ID
+			,JOB_SE_CODE
+			,INSTT_CODE
+			,TO_CHAR(OCCRRNC_DE, 'YYYY-MM-DD HH24:MI:SS') AS OCCRRNC_DE
+			,RQESTER_IP
+			,RQESTER_ID
+			,TRGET_MENU_NM
+			,SVC_NM
+			,METHOD_NM
+			,PROCESS_SE_CODE
+			,PROCESS_CO
+			,PROCESS_TIME
+			,RSPNS_CODE
+			,ERROR_SE
+			,ERROR_CO
+			,REQUST_URI
+			,REQUST_DOMN
+			,ERROR_CODE
+		FROM COMTNSYSLOG
+		ORDER BY REQUST_ID DESC
+	</select>
+	
+	<select id="selectSysLogSummaryList" resultType="egovMap">
+		SELECT *
+		FROM COMTSSYSLOGSUMMARY
+		ORDER BY OCCRRNC_DE DESC
+	</select>
+
+</mapper>

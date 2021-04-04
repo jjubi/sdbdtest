@@ -1,0 +1,151 @@
+<div class="container-fluid">
+	<h1 class="header-title">모달 Style Guide</h1>
+	<div class="card">
+		<div class="card-body">
+			<h1 class="h1">모달 공통</h1>
+<!-- **************************************************************************** 참고 하세요 ****************************************************************************-->
+			<button type="button" class="btn btn-basic" data-toggle="modal"
+				data-target="#myModal">모달 버튼</button>
+
+			<!-- The Modal -->
+			<div class="modal fade" id="myModal">
+				<div class="modal-dialog modal-lg modal-dialog-centered">
+					<div class="modal-content">
+
+						<!-- Modal Header -->
+						<div class="modal-header">
+							<h4 class="modal-title">메뉴 추가</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						<!-- Modal body -->
+						<div class="modal-body">
+							<form id="menuRegistForm">
+								<div class="form-group">
+									<h2 class="h2">메뉴정보</h2>
+									<h3 class="h3">메뉴정보</h3>
+									<h4 class="h4">메뉴정보</h4>
+									<h5 class="h5-no">메뉴정보</h5>
+									<label for="menuNm" class="title_blue">메뉴 이름</label> <input
+										class="form-control" id="menuNm" name="menuNm" title="메뉴 이름"
+										type="text" placeholder="메뉴 이름 입력..">
+								</div>
+								<div class="form-group">
+									<label for="typeP" class="title_blue">메뉴타입</label>
+
+									<div class="check-type1">
+										<input type="radio" name="menuTy" id="typeP" value="P">
+										<label for="typeP" class="btn active radio-type1 first">
+											<span class="radio_check"></span>프로그램
+										</label> <input type="radio" name="menuTy" id="typeB" value="B">
+										<label for="typeB" class="btn"> <span
+											class="radio_check"></span>게시판
+										</label> <input type="radio" name="menuTy" id="typeC" value="C">
+										<label for="typeC" class="btn"> <span
+											class="radio_check"></span>컨텐츠
+										</label>
+									</div>
+
+									<div class="check-type1">
+										<input type="checkbox" name="menuTy" id="typeD" value="D">
+										<label for="typeD" class="btn active radio-type1 first"><span
+											class="radio_check"></span>프로그램</label> <input type="checkbox"
+											name="menuTy" id="typeE" value="E"> <label
+											for="typeE" class="btn"><span class="radio_check"></span>게시판</label>
+										<input type="checkbox" name="menuTy" id="typeF" value="F">
+										<label for="typeF" class="btn"><span
+											class="radio_check"></span>컨텐츠</label>
+									</div>
+
+								</div>
+								<div class="form-group" id="menuUrlArea">
+									<label for="menuUrl" class="title_black">메뉴 URL</label> <input
+										class="form-control" id="menuUrl" name="menuUrl"
+										title="메뉴 URL" type="text" placeholder="메뉴 URL 입력..">
+								</div>
+								<div class="form-group" id="menuBbsArea" style="display: none;">
+									<label for="menuBbs">게시판 목록</label> <select
+										class="custom-select" id="menuBbs" name="menuBbs"
+										title="게시판 목록" data-toggle="select">
+										<option value="">- 선택 -</option>
+
+										<option value="BBS_0000000000000007">공지사항</option>
+
+										<option value="BBS_0000000000000004">자주하는질문</option>
+
+										<option value="BBS_0000000000000003">자유게시판</option>
+
+									</select>
+								</div>
+								<div class="form-group" id="menuCntntsArea"
+									style="display: none;">
+									<label for="menuCntnts">컨텐츠 목록</label> <select
+										class="custom-select" id="menuCntnts" name="menuCntnts"
+										title="컨텐츠 목록" data-toggle="select">
+										<option value="">- 선택 -</option>
+
+										<option value="3">테스트</option>
+
+										<option value="2">텍스으으으</option>
+
+									</select>
+								</div>
+								<div class="form-group">
+									<label for="menuTarget" class="title_blue">메뉴 Target</label> <select
+										class="custom-select" id="menuTarget" name="menuTarget"
+										title="메뉴 Target" data-toggle="select">
+										<option value="_blank">새 창</option>
+										<option value="_self">현재 창</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<label for="menuAuthor">메뉴 권한</label> <select
+										class="custom-select" id="menuAuthor" name="menuAuthor"
+										title="메뉴 권한" data-toggle="select">
+
+										<option value="ROLE_SUBADMIN">서브관리자</option>
+
+										<option value="ROLE_ADMIN">관리자</option>
+
+									</select>
+								</div>
+								<div class="form-group">
+									<label for="menuIconClass">아이콘 Class</label> <input
+										class="form-control" id="menuIconClass" name="menuIconClass"
+										title="메뉴 아이콘 Class" type="text"
+										placeholder="메뉴 아이콘 Class 입력..">
+								</div>
+								<div class="form-group">
+									<label for="useAtY">사용여부</label>
+									<div class="check-type1">
+										<input type="radio" name="menuUseAt" id="useAtY" value="Y">
+										<label for="useAtY" class="btn active radio-type1 first">
+											<span class="radio_check"></span> 사용
+										</label> <input type="radio" name="menuUseAt" id="useAtN" value="N">
+										<label for="useAtN" class="btn"> <span
+											class="radio_check"></span>사용안함
+										</label>
+									</div>
+								</div>
+							</form>
+						</div>
+
+						<!-- Modal footer -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-outline-secondary"
+								title="닫기 버튼">닫기</button>
+							<button type="submit" class="btn btn-basic" title="등록 버튼"
+								onclick="return fn_egov_addView();">
+								<i class="fa fa-save" aria-hidden="true"></i> 등록
+							</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+

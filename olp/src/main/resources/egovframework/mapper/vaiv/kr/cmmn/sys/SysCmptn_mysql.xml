@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : SysCmptn.xml 
+  * 상세설명 : 시스템 구성 정보 데이터 핸들링
+  * 작성일시 : 2020. 12. 31
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2020. 12. 31.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.SysCmptn">
+	<select id="selectSysCmptnList" parameterType="sysCmptnVO" resultType="sysCmptnVO">
+		SELECT
+			SYS_CMPTN_CODE AS sysCmptnCode
+			,SYS_CMPTN_NM AS sysCmptnNm
+			,SYS_CMPTN_VALUE AS sysCmptnValue
+			<include refid="cmmn.Common.common-column1"></include>
+		FROM T_SYS_CMPTN_M01
+		WHERE 1=1
+		<if test="searchCondition == 1">
+		  AND SYS_CMPTN_CODE LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 2">
+		  AND SYS_CMPTN_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 3">
+		  AND SYS_CMPTN_VALUE LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+        <if test="searchCondition == 5">
+          AND USE_AT = #{searchKeyword}
+        </if>
+		ORDER BY REGIST_DE DESC
+		<include refid="cmmn.Common.common-paging"></include>
+	</select>
+
+	<select id="selectSysCmptnListTotCnt" parameterType="sysCmptnVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_SYS_CMPTN_M01
+		WHERE 1=1
+		<if test="searchCondition == 1">
+		  AND SYS_CMPTN_CODE LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 2">
+		  AND SYS_CMPTN_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 3">
+		  AND SYS_CMPTN_VALUE LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+        <if test="searchCondition == 5">
+          AND USE_AT = #{searchKeyword}
+        </if>
+	</select>
+	
+	<select id="checkSysCmptnCodeDplct" parameterType="string" resultType="int">
+		SELECT COUNT(*)
+		FROM T_SYS_CMPTN_M01
+		WHERE SYS_CMPTN_CODE = #{value}
+	</select>
+	
+	<insert id="insertSysCmptn" parameterType="sysCmptnVO">
+		INSERT INTO T_SYS_CMPTN_M01
+		(
+			SYS_CMPTN_CODE
+			,SYS_CMPTN_NM
+			,SYS_CMPTN_VALUE
+			,USE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+		)
+		VALUES
+		(
+			#{sysCmptnCode}
+			,#{sysCmptnNm}
+			,#{sysCmptnValue}
+			,#{useAt}
+			,NOW()
+			,#{registId}
+			,NOW()
+			,#{updtId}
+		)
+	</insert>
+	
+	<select id="selectSysCmptn" parameterType="sysCmptnVO" resultType="sysCmptnVO">
+		SELECT
+			SYS_CMPTN_CODE AS sysCmptnCode
+			,SYS_CMPTN_NM AS sysCmptnNm
+			,SYS_CMPTN_VALUE AS sysCmptnValue
+			<include refid="cmmn.Common.common-column1"></include>
+		FROM T_SYS_CMPTN_M01
+		WHERE SYS_CMPTN_CODE = #{sysCmptnCode}
+		<if test='useAt != null and useAt != ""'>
+		  AND USE_AT = #{useAt}
+		</if>
+	</select>
+	
+	<update id="updateSysCmptn" parameterType="sysCmptnVO">
+		UPDATE T_SYS_CMPTN_M01
+		SET UPDT_DE = NOW()
+			,UPDT_ID = #{updtId}
+			,SYS_CMPTN_NM = #{sysCmptnNm}
+			,SYS_CMPTN_VALUE = #{sysCmptnValue}
+			,USE_AT = #{useAt}
+		WHERE SYS_CMPTN_CODE = #{sysCmptnCode}
+	</update>
+	
+	<delete id="deleteSysCmptn" parameterType="sysCmptnVO">
+		DELETE FROM T_SYS_CMPTN_M01
+		WHERE SYS_CMPTN_CODE = #{sysCmptnCode}
+	</delete>
+	
+	
+</mapper>

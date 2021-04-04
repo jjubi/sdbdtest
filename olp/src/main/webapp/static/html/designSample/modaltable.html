@@ -1,0 +1,125 @@
+<div class="container-fluid">
+	<h1 class="header-title">모달 Style Guide</h1>
+	<div class="card">
+		<div class="card-body">
+			<h1 class="h1">모달 안 테이블</h1>
+<!-- **************************************************************************** 참고 하세요 ****************************************************************************-->
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				data-target="#myModal">모달 버튼</button>
+
+			<!-- The Modal -->
+			<div class="modal fade" id="myModal">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+
+						<!-- Modal Header -->
+						<div class="modal-header">
+							<h4 class="modal-title">승무사원 조회 팝업</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						<!-- Modal body -->
+						<div class="modal-body">
+							<form id="menuRegistForm">
+								<form id="searchForm" name="searchForm" action="" method="post">
+									<fieldset>
+										<legend>게시물 검색</legend>
+										<div class="ui program-search"
+											title="이 레이아웃은 하단 정보를 대한 검색 정보로 구성되어 있습니다.">
+											<div class="search_inner clearfix right">
+												<div class="fieldset">
+													<div class="search-select">
+														<span> <select class="form-control"
+															name="searchCondition" title="검색조건 선택">
+																<option value="all">이름</option>
+																<option value="groupName">사번</option>
+																<option value="groupCode">구분</option>
+														</select>
+														</span>
+													</div>
+													<div class="search-text">
+														<span><input type="text" name="searchKeyword"
+															value="" maxlength="50" title="검색어 입력"
+															placeholder="검색어를 입력해 주세요" class="form-control"></span>
+													</div>
+													<div class="search-btn">
+														<button type="button" class="btn btn-dark btn-sm"
+															onclick="#" title="등록 버튼">
+															<i class="fa fa-search" aria-hidden="true"></i> 조회
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</fieldset>
+								</form>
+								<div class="table-responsive fixheight">
+									<table
+										class="table table-bordered table-hover table-checkbox text-center">
+										<thead>
+											<tr>
+												<th scope="col"><input type="checkbox" /></th>
+												<th scope="col">사번</th>
+												<th scope="col">이름</th>
+												<th scope="col">구분</th>
+												<th scope="col">입사일</th>
+												<th scope="col">상태</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<th scope="row"><input type="checkbox" /></th>
+												<td>1700001</td>
+												<td>홍길동</td>
+												<td>시내</td>
+												<td>17.01.01</td>
+												<td>정상</td>
+											</tr>
+											<tr>
+												<th scope="row"><input type="checkbox" /></th>
+												<td>1700001</td>
+												<td>홍길동</td>
+												<td>시내</td>
+												<td>17.01.01</td>
+												<td>정상</td>
+											</tr>
+											<tr>
+												<th scope="row"><input type="checkbox" /></th>
+												<td>1700001</td>
+												<td>홍길동</td>
+												<td>시내</td>
+												<td>17.01.01</td>
+												<td>정상</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="select-infobox">
+									<div class="inner">
+										<a href="">170001 홍길동<span class="delete">x</span></a> <a
+											href="">170001 홍길동<span class="delete">x</span></a> <a
+											href="">170001 홍길동<span class="delete">x</span></a> <a
+											href="">170001 홍길동<span class="delete">x</span></a>
+									</div>
+								</div>
+							</form>
+						</div>
+
+						<!-- Modal footer -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-outline-secondary"
+								title="닫기 버튼">닫기</button>
+							<button type="submit" class="btn btn-basic" title="등록 버튼"
+								onclick="return fn_egov_addView();">
+								<i class="fa fa-save" aria-hidden="true"></i> 등록
+							</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+</div>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC 
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN" 
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+	<formset>
+        <form name="bbsTyVO">
+            <field property="bbsTyNm" depends="required, maxlength">
+                <arg0 key="게시판 유형 이름" resource="true"/>
+                <arg1 key="200" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>200</var-value>
+				</var>
+            </field>
+            <field property="bbsTyCode" depends="required, maxlength">
+                <arg0 key="게시판 유형 코드" resource="true"/>
+                <arg1 key="20" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>20</var-value>
+				</var>
+            </field>
+            <field property="bbsTyDc" depends="maxlength">
+                <arg0 key="게시판 유형 설명" resource="true"/>
+                <arg1 key="3000" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>3000</var-value>
+				</var>
+            </field>
+        </form>
+    </formset>
+    <formset>
+        <form name="bbsVO">
+            <field property="bbsTyId" depends="required">
+                <arg0 key="게시판 유형 ID" resource="true"/>
+            </field>
+            <field property="bbsNm" depends="required, maxlength">
+                <arg0 key="게시판 명" resource="true"/>
+                <arg1 key="200" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>200</var-value>
+				</var>
+            </field>
+            <field property="bbsDc" depends="maxlength">
+            	<arg0 key="게시판 설명" resource="true"/>
+                <arg1 key="3000" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>3000</var-value>
+				</var>
+            </field>
+            <field property="bbsPdUseAt" depends="required">
+            	<arg0 key="게시기간 사용여부" resource="true"/>
+            </field>
+            <field property="useAt" depends="required">
+            	<arg0 key="사용 여부" resource="true"/>
+            </field>
+        </form>
+    </formset>
+    <formset>
+    	<form name="nttVO">
+    		<field property="nttSj" depends="required, maxlength">
+    			<arg0 key="게시글 제목" resource="true"/>
+                <arg1 key="200" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>200</var-value>
+				</var>
+    		</field>
+    		<field property="nttCn" depends="required">
+    			<arg0 key="게시글 내용" resource="true"/>
+    		</field>
+    	</form>
+    </formset>
+</form-validation>

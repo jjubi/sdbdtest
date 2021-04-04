@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC 
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN" 
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+	<formset>
+        <form name="cntntsVO">
+            <field property="cntntsCode" depends="required, maxlength">
+                <arg0 key="컨텐츠 코드" resource="true"/>
+                <arg1 key="30" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>30</var-value>
+				</var>
+            </field>
+            <field property="cntntsNm" depends="required, maxlength">
+                <arg0 key="컨텐츠 명" resource="true"/>
+                <arg1 key="100" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>100</var-value>
+				</var>
+            </field>
+            <field property="cntntsCn" depends="required">
+                <arg0 key="컨턴츠 내용" resource="true"/>
+            </field>
+        </form>
+    </formset>
+    <!-- 배너 관리 -->
+    <formset>
+        <form name="bannerVO">
+        	<field property="bannerNm" depends="required, maxlength">
+                <arg0 key="배너 명" resource="true"/>
+                <arg1 key="50" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>50</var-value>
+				</var>
+            </field>
+        	<field property="bannerUrl" depends="required, maxlength">
+                <arg0 key="배너 URL" resource="true"/>
+                <arg1 key="400" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>400</var-value>
+				</var>
+            </field>
+        	<field property="bannerTy" depends="required">
+                <arg0 key="배너 유형" resource="true"/>
+            </field>
+        	<field property="bannerOrdr" depends="required, integer">
+                <arg0 key="배너 순서" resource="true"/>
+            </field>
+        	
+        </form>
+	</formset>
+	<!-- 팝업 관리 -->
+    <formset>
+        <form name="popupVO">
+        	<field property="popupNm" depends="required, maxlength">
+                <arg0 key="팝업 명" resource="true"/>
+                <arg1 key="50" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>50</var-value>
+				</var>
+            </field>
+        	<field property="popupUrl" depends="required, maxlength">
+                <arg0 key="팝업 URL" resource="true"/>
+                <arg1 key="400" resource="true"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>400</var-value>
+				</var>
+            </field>
+        	<field property="popupOrdr" depends="required">
+                <arg0 key="팝업 순서" resource="true"/>
+            </field>
+        	
+        </form>
+	</formset>
+    
+</form-validation>

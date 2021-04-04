@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!--Mybatis 설정 -->
+	<settings>
+		<!-- 전통적인 데이터베이스 컬럼명 형태인 A_COLUMN을 CamelCase형태의 자바 프로퍼티명 형태인 aColumn으로 자동으로 매핑하도록 함 -->
+		<setting name="mapUnderscoreToCamelCase" value="true"></setting>
+		<!-- null일 경우에도 map에 컬럼을 가져오도록 함 -->
+		<setting name="callSettersOnNulls" value="true"/>
+		<!--  파라미터에 Null 값이 있을 경우 에러 처리 -->
+<!-- 		<setting name="jdbcTypeForNull" value="VARCHAR"></setting> -->
+	</settings>
+	
+	<!-- Type Aliases 설정-->
+	<typeAliases>
+		<typeAlias alias="egovMap" 			type="egovframework.rte.psl.dataaccess.util.EgovMap" />
+		<typeAlias alias="hMap" 			type="java.util.HashMap" />
+		
+		<typeAlias alias="FileVO"			type="egovframework.com.cmm.service.FileVO" />
+		<typeAlias alias="comDefaultVO"		type="egovframework.com.cmm.ComDefaultVO" />
+		
+		<!-- vaiv 공통(cmmn) -->
+		<typeAlias alias="menuVO"           	type="egovframework.vaiv.kr.cmmn.menu.service.MenuVO"/>
+		<typeAlias alias="comCodeGroupVO"   	type="egovframework.vaiv.kr.cmmn.comCode.group.service.ComCodeGroupVO"/>
+		<typeAlias alias="comCodeVO"        	type="egovframework.vaiv.kr.cmmn.comCode.service.ComCodeVO"/>
+		<typeAlias alias="bbsSearchVO"  	    type="egovframework.vaiv.kr.cmmn.bbs.common.SearchVO"/>
+		<typeAlias alias="bbsVO"      	      	type="egovframework.vaiv.kr.cmmn.bbs.service.BbsVO"/>
+		<typeAlias alias="bbsTyVO"     	  		type="egovframework.vaiv.kr.cmmn.bbs.ty.service.BbsTyVO"/>
+		<typeAlias alias="bbsAuthorVO"  	    type="egovframework.vaiv.kr.cmmn.bbs.author.service.BbsAuthorVO"/>
+		<typeAlias alias="bbsOptnVO"    	    type="egovframework.vaiv.kr.cmmn.bbs.optn.service.BbsOptnVO"/>
+		<typeAlias alias="nttVO"          	    type="egovframework.vaiv.kr.cmmn.bbs.ntt.service.NttVO"/>
+		<typeAlias alias="cmtVO"         	    type="egovframework.vaiv.kr.cmmn.bbs.ntt.cmt.service.CmtVO"/>
+		<typeAlias alias="cntntsVO"       	    type="egovframework.vaiv.kr.cmmn.cntnts.service.CntntsVO"/>
+		<typeAlias alias="cntntsHisVO"    	    type="egovframework.vaiv.kr.cmmn.cntnts.service.CntntsHisVO"/>
+		<typeAlias alias="sysCmptnVO" 	 	    type="egovframework.vaiv.kr.cmmn.sys.cmptn.service.SysCmptnVO"/>
+		<typeAlias alias="prhibtWrdVO" 			type="egovframework.vaiv.kr.cmmn.prhibtWrd.service.PrhibtWrdVO"/>
+		<typeAlias alias="bannerVO" 			type="egovframework.vaiv.kr.cmmn.banner.service.BannerVO"/>
+		<typeAlias alias="popupVO" 				type="egovframework.vaiv.kr.cmmn.popup.service.PopupVO"/>
+		<typeAlias alias="qestnarSearchVO"		type="egovframework.vaiv.kr.cmmn.qestnar.common.SearchVO"/>
+		<typeAlias alias="qestnarVO" 			type="egovframework.vaiv.kr.cmmn.qestnar.service.QestnarVO"/>
+		<typeAlias alias="qestnarTrgetVO"	 	type="egovframework.vaiv.kr.cmmn.qestnar.service.QestnarTrgtVO"/>
+		<typeAlias alias="qestnVO" 				type="egovframework.vaiv.kr.cmmn.qestnar.qestn.service.QestnVO"/>
+		<typeAlias alias="qestnOptnVO" 			type="egovframework.vaiv.kr.cmmn.qestnar.qestn.service.QestnOptnVO"/>
+		<typeAlias alias="qestnAswperVO" 		type="egovframework.vaiv.kr.cmmn.qestnar.qestn.service.QestnAswperVO"/>
+		<typeAlias alias="qestnarSenarioVO" 	type="egovframework.vaiv.kr.cmmn.qestnar.service.QestnarSenarioVO"/>
+		<typeAlias alias="qestnarSenarioDtlVO" 	type="egovframework.vaiv.kr.cmmn.qestnar.service.QestnarSenarioDtlVO"/>
+		<typeAlias alias="qestnarResultVO" 		type="egovframework.vaiv.kr.cmmn.qestnar.service.QestnarResultVO"/>
+		<typeAlias alias="qestnarResultDtlVO" 	type="egovframework.vaiv.kr.cmmn.qestnar.service.QestnarResultDtlVO"/>
+		<typeAlias alias="csnstVO" 				type="egovframework.vaiv.kr.cmmn.csnst.service.CsnstVO"/>
+		<typeAlias alias="ipCtrlVO" 			type="egovframework.vaiv.kr.cmmn.perm.service.IpCtrlVO"/>
+		<typeAlias alias="sysExcpVO" 			type="egovframework.vaiv.kr.cmmn.sys.excp.service.SysExcpVO"/>
+		<typeAlias alias="dataVsltnCnrsVO" 		type="egovframework.vaiv.kr.cmmn.data.vsltn.service.DataVsltnCnrsVO"/>
+		
+		
+	</typeAliases>
+    
+</configuration>

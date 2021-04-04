@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : QestnarSenario.xml 
+  * 상세설명 : 설문 시나리오 데이터 핸들링
+  * 작성일시 : 2021. 03. 03
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2021. 03. 03.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.QestnarSenario">
+
+	<select id="selectQestnarSenarioList" parameterType="qestnarSearchVO" resultType="qestnarSenarioVO">
+		SELECT
+			QESTNAR_SEQ_NO AS qestnarSeqNo
+			,SENARIO_SEQ_NO AS senarioSeqNo
+			,DTRMN_QESTN_SEQ_NO AS dtrmnQestnSeqNo
+			,TRGET_QESTN_SEQ_NO AS trgetQestnSeqNo
+			,REGIST_DE AS registDe
+			,REGIST_ID AS registId
+		FROM T_QESTNAR_SENARIO_M01
+		WHERE QESTNAR_SEQ_NO = #{qestnarSeqNo}
+		<if test='dtrmnQestnSeqNo != null and dtrmnQestnSeqNo != ""'>
+			AND DTRMN_QESTN_SEQ_NO = #{dtrmnQestnSeqNo}
+		</if>
+	</select>
+	
+	<select id="selectQestnarSenarioDtlList" parameterType="qestnarSenarioVO" resultType="qestnarSenarioDtlVO">
+		SELECT
+			SENARIO_SEQ_NO AS senarioSeqNo
+			,DTRMN_CND_ORDR AS dtrmnCndOrdr
+			,DTRMN_CND AS dtrmnCnd
+			,DTRMN_CND_VALUE AS dtrmnCndValue
+			,DTRMN_CND_LOGIC AS dtrmnCndLogic
+			,REGIST_DE AS registDe
+		FROM T_QESTNAR_SENARIO_D01
+		WHERE SENARIO_SEQ_NO = #{senarioSeqNo}
+	</select>
+	
+	<delete id="deleteQestnarSenario" parameterType="qestnarSenarioVO">
+		DELETE FROM T_QESTNAR_SENARIO_M01
+		WHERE QESTNAR_SEQ_NO = #{qestnarSeqNo}
+	</delete>
+	
+	<delete id="deleteQestnarSenarioDtl" parameterType="qestnarSenarioVO">
+		DELETE FROM T_QESTNAR_SENARIO_D01
+		WHERE SENARIO_SEQ_NO IN (SELECT TA.SENARIO_SEQ_NO FROM T_QESTNAR_SENARIO_M01 TA WHERE QESTNAR_SEQ_NO = #{qestnarSeqNo})
+	</delete>
+	
+	<insert id="insertQestnarSenario" parameterType="qestnarSenarioVO">
+		INSERT INTO T_QESTNAR_SENARIO_M01
+		(
+			QESTNAR_SEQ_NO
+			,SENARIO_SEQ_NO
+			,DTRMN_QESTN_SEQ_NO
+			,TRGET_QESTN_SEQ_NO
+			,REGIST_DE
+			,REGIST_ID
+		)
+		VALUES
+		(
+			#{qestnarSeqNo}
+			,QESTNAR_SENARIO_M01_SEQ1.NEXTVAL
+			,#{dtrmnQestnSeqNo}
+			,#{trgetQestnSeqNo}
+			,SYSDATE
+			,#{registId}
+		)
+		<selectKey keyProperty="senarioSeqNo" resultType="string" order="AFTER">
+			SELECT QESTNAR_SENARIO_M01_SEQ1.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<insert id="insertQestnarSenarioDtl" parameterType="qestnarSenarioDtlVO">
+		INSERT INTO T_QESTNAR_SENARIO_D01
+		(
+			SENARIO_SEQ_NO
+			,DTRMN_CND_ORDR
+			,DTRMN_CND
+			,DTRMN_CND_VALUE
+			,DTRMN_CND_LOGIC
+			,REGIST_DE
+		)
+		VALUES
+		(
+			#{senarioSeqNo}
+			,#{dtrmnCndOrdr}
+			,#{dtrmnCnd}
+			,#{dtrmnCndValue}
+			,#{dtrmnCndLogic}
+			,SYSDATE
+		)
+	</insert>
+	
+</mapper>
+
+
+
+
+
+
+
+
+

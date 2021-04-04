@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- 
+  * Xml Name : Cntnts.xml 
+  * 상세설명 : 컨텐츠 데이터 핸들링
+  * 작성일시 : 2021. 03. 03
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2021. 03. 03.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Cntnts">
+	<select id="selectCntntsList" parameterType="cntntsVO" resultType="cntntsVO">
+		<include refid="cmmn.Common.common-paging-top"></include>
+		SELECT
+			CNTNTS_ID AS cntntsId
+			,CNTNTS_CODE AS cntntsCode
+			,CNTNTS_NM AS cntntsNm
+			,CNTNTS_CN AS cntntsCn
+			,ATCH_FILE_ID AS atchFileId
+			<include refid="cmmn.Common.common-column1"></include>
+		FROM T_CNTNTS_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND CNTNTS_CODE LIKE '%' || #{searchKeyword} || '%'
+        </if>
+		<if test="searchCondition == 2">
+		  AND CNTNTS_NM LIKE '%' || #{searchKeyword} || '%'
+        </if>
+		<if test="searchCondition == 3">
+		  AND CNTNTS_CN LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test="searchCondition == 5">
+          AND USE_AT = #{searchKeyword}
+        </if>
+		ORDER BY REGIST_DE DESC
+		<include refid="cmmn.Common.common-paging-bottom"></include>
+	</select>
+	
+	<select id="selectCntntsListTotCnt" parameterType="cntntsVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_CNTNTS_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND CNTNTS_CODE LIKE '%' || #{searchKeyword} || '%'
+        </if>
+		<if test="searchCondition == 2">
+		  AND CNTNTS_NM LIKE '%' || #{searchKeyword} || '%'
+        </if>
+		<if test="searchCondition == 3">
+		  AND CNTNTS_CN LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test="searchCondition == 5">
+          AND USE_AT = #{searchKeyword}
+        </if>
+	</select>
+
+	<insert id="insertCntnts" parameterType="cntntsVO">
+		INSERT INTO T_CNTNTS_M01
+		(
+			CNTNTS_ID
+			,CNTNTS_CODE
+			,CNTNTS_NM
+			,CNTNTS_CN
+			,ATCH_FILE_ID
+			,CCL_TY
+			,KOGL_TY
+			,USE_AT
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID			
+		)
+		VALUES
+		(
+			CNTNTS_M01_SEQ1.NEXTVAL
+			,#{cntntsCode}
+			,#{cntntsNm}
+			,#{cntntsCn}
+			,#{atchFileId}
+			,#{cclTy}
+			,#{koglTy}
+			,#{useAt}
+			,'N'
+			,SYSDATE
+			,#{registId}
+			,SYSDATE
+			,#{updtId}
+		)
+	</insert>
+	
+	<insert id="insertHistoryCntnts" parameterType="cntntsVO">
+		INSERT INTO T_CNTNTS_H01
+		(
+			HIST_SEQ_NO
+			,CNTNTS_ID
+			,CNTNTS_CODE
+			,CNTNTS_NM
+			,CNTNTS_CN
+			,ATCH_FILE_ID
+			,CCL_TY
+			,USE_AT
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID	
+			,HIST_REGIST_DE		
+		)
+		SELECT
+			CNTNTS_H01_SEQ1.NEXTVAL AS HIST_SEQ_NO
+			,CNTNTS_ID 
+			,CNTNTS_CODE
+			,CNTNTS_NM
+			,CNTNTS_CN
+			,ATCH_FILE_ID
+			,CCL_TY
+			,USE_AT
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+			,SYSDATE AS HIST_REGIST_DE
+  		FROM T_CNTNTS_M01
+  		WHERE CNTNTS_ID = #{cntntsId}
+	</insert>
+	
+	<select id="selectCntnts" parameterType="cntntsVO" resultType="cntntsVO">
+		SELECT
+			TA.CNTNTS_ID AS cntntsId
+			,TA.CNTNTS_CODE AS cntntsCode
+			,TA.CNTNTS_NM AS cntntsNm
+			,TA.CNTNTS_CN AS cntntsCn
+			,TA.ATCH_FILE_ID AS atchFileId
+			,TA.CCL_TY AS cclTy
+			,TA.KOGL_TY AS koglTy
+			,TC.USER_NM AS registNm
+			<include refid="cmmn.Common.common-column1"></include>
+		FROM T_CNTNTS_M01 TA
+		LEFT OUTER JOIN COMVNUSERMASTER TC
+		ON (TA.REGIST_ID = TC.ESNTL_ID)
+		WHERE DELETE_AT = 'N'
+		  AND CNTNTS_ID = #{cntntsId}
+	</select>
+	
+	<update id="updateCntnts" parameterType="cntntsVO">
+		UPDATE T_CNTNTS_M01
+		SET	UPDT_DE = SYSDATE
+			,UPDT_ID = #{updtId}
+			,CNTNTS_CODE = #{cntntsCode}
+			,CNTNTS_NM = #{cntntsNm}
+			,CNTNTS_CN = #{cntntsCn}
+			,ATCH_FILE_ID = #{atchFileId}
+			,CCL_TY = #{cclTy}
+			,KOGL_TY = #{koglTy}
+			,USE_AT = #{useAt}
+		WHERE DELETE_AT = 'N'
+		  AND CNTNTS_ID = #{cntntsId}
+	</update>
+	
+	<update id="deleteCntnts" parameterType="cntntsVO">
+		UPDATE T_CNTNTS_M01
+		SET UPDT_DE = SYSDATE
+			,UPDT_ID = #{updtId}
+			,DELETE_AT = 'Y'
+		WHERE DELETE_AT = 'N'
+		  AND CNTNTS_ID = #{cntntsId}
+	</update>
+	
+	<select id="selectCntntsHisList" parameterType="cntntsHisVO" resultType="cntntsHisVO">
+		<include refid="cmmn.Common.common-paging-top"></include>
+		SELECT
+			HIST_SEQ_NO AS histSeqNo
+			,CNTNTS_ID AS cntntsId
+			,CNTNTS_CODE AS cntntsCode
+			,CNTNTS_NM AS cntntsNm
+			,CNTNTS_CN AS cntntsCn
+			,ATCH_FILE_ID AS atchFileId
+			,CCL_TY AS cclTy
+			,KOGL_TY AS koglTy
+			,DELETE_AT AS deleteAt
+			<include refid="cmmn.Common.common-column1"></include>
+			,HIST_REGIST_DE AS histRegistDe
+		FROM T_CNTNTS_H01
+		WHERE CNTNTS_ID = #{cntntsId}
+		ORDER BY HIST_REGIST_DE DESC
+        <include refid="cmmn.Common.common-paging-bottom"></include>
+	</select>
+	
+	<select id="selectCntntsHisListTotCnt" parameterType="cntntsHisVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_CNTNTS_H01
+		WHERE CNTNTS_ID = #{cntntsId}
+	</select>
+	
+	<select id="selectCntntsHis" parameterType="cntntsHisVO" resultType="cntntsHisVO">
+		SELECT
+			HIST_SEQ_NO AS histSeqNo
+			,CNTNTS_ID AS cntntsId
+			,CNTNTS_CODE AS cntntsCode
+			,CNTNTS_NM AS cntntsNm
+			,CNTNTS_CN AS cntntsCn
+			,ATCH_FILE_ID AS atchFileId
+			,CCL_TY AS cclTy
+			,KOGL_TY AS koglTy
+			,DELETE_AT AS deleteAt
+			<include refid="cmmn.Common.common-column1"></include>
+			,HIST_REGIST_DE AS histRegistDe
+		FROM T_CNTNTS_H01
+		WHERE HIST_SEQ_NO = #{histSeqNo}
+	</select>
+
+</mapper>

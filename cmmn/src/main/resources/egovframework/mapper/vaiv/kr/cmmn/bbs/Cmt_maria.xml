@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : Cmt.xml 
+  * 상세설명 : 댓글 데이터 핸들링
+  * 작성일시 : 2020. 12. 31
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2020. 12. 31.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Cmt">
+	<select id="selectCmtList" parameterType="cmtVO" resultType="cmtVO">
+		SELECT
+			TA.NTT_ID AS nttId
+			,TA.CMT_ID AS cmtId
+			,TA.CMT_CN AS cmtCn
+			,DATE_FORMAT(TA.REGIST_DE, '%Y-%m-%d %H:%i') AS registDe
+			,TA.REGIST_ID AS registId
+			,DATE_FORMAT(TA.UPDT_DE, '%Y-%m-%d %H:%i') AS updtDe
+			,TA.UPDT_ID AS updtId
+			,TC.USER_NM AS registNm
+		FROM T_CMT_M01 TA
+		INNER JOIN T_NTT_M01 TB
+		ON (TA.NTT_ID = TB.NTT_ID AND TB.DELETE_AT = 'N')
+		LEFT OUTER JOIN COMVNUSERMASTER TC
+		ON (TA.REGIST_ID = TC.ESNTL_ID)
+		WHERE TA.DELETE_AT = 'N'
+		  AND TA.NTT_ID = #{nttId}
+		<if test="searchCondition == 1">
+		  AND TA.CMT_CN LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+        ORDER BY TA.REGIST_DE DESC
+        <include refid="cmmn.Common.common-paging"></include>
+	</select>
+
+	<insert id="insertCmt" parameterType="cmtVO">
+		INSERT INTO T_CMT_M01
+		(
+			NTT_ID
+			,CMT_CN
+			,REGIST_ID
+			,REGIST_DE
+			,UPDT_ID
+			,UPDT_DE
+			,DELETE_AT
+		)
+		VALUES 
+		(
+			#{nttId}
+			,#{cmtCn}
+			,#{registId}
+			,NOW()
+			,#{updtId}
+			,NOW()
+			,'N'
+		)
+		<selectKey keyProperty="cmtId" resultType="string" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<update id="deleteCmt" parameterType="cmtVO">
+		UPDATE T_CMT_M01
+		SET	DELETE_AT = 'Y'
+			,UPDT_DE = NOW()
+			,UPDT_ID = #{updtId}
+		WHERE DELETE_AT = 'N'
+		  AND CMT_ID = #{cmtId}
+	</update>
+
+	<update id="updateCmt" parameterType="cmtVO">
+		UPDATE T_CMT_M01
+		SET	UPDT_DE = NOW()
+			,UPDT_ID = #{updtId}
+			,CMT_CN = #{cmtCn}
+		WHERE DELETE_AT = 'N'
+		  AND CMT_ID = #{cmtId}
+	</update>
+	
+	<select id="selectCmt" parameterType="cmtVO" resultType="cmtVO">
+		SELECT
+			TA.NTT_ID AS nttId
+			,TA.CMT_ID AS cmtId
+			,TA.CMT_CN AS cmtCn
+			,DATE_FORMAT(TA.REGIST_DE, '%Y-%m-%d %H:%i') AS registDe
+			,TA.REGIST_ID AS registId
+			,DATE_FORMAT(TA.UPDT_DE, '%Y-%m-%d %H:%i') AS updtDe
+			,TA.UPDT_ID AS updtId
+			,TC.USER_NM AS registNm
+		FROM T_CMT_M01 TA
+		INNER JOIN T_NTT_M01 TB
+		ON (TA.NTT_ID = TB.NTT_ID AND TB.DELETE_AT = 'N')
+		LEFT OUTER JOIN COMVNUSERMASTER TC
+		ON (TA.REGIST_ID = TC.ESNTL_ID)
+		WHERE TA.DELETE_AT = 'N'
+		  AND TA.CMT_ID = #{cmtId}
+	</select>
+</mapper>

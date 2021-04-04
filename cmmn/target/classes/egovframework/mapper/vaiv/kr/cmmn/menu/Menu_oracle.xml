@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : Menu.xml 
+  * 상세설명 : 메뉴 데이터 핸들링
+  * 작성일시 : 2021. 03. 03
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2021. 03. 03.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Menu">
+
+	<select id="selectMenuList" parameterType="menuVO" resultType="menuVO">
+		SELECT
+			MENU_SEQ_NO AS menuSeqNo
+			,UPPER_SEQ_NO AS upperSeqNo
+			,MENU_AUTHOR AS menuAuthor
+			,MENU_NM AS menuNm
+		<choose>
+			<when test="searchCondition == 999">
+			,CASE 
+				WHEN MENU_TY = 'C' THEN (SELECT CHR(47) || 'cmmn' || CHR(47) || DECODE(MENU_SE, 'A', 'adm', 'usr') || CHR(47) || 'cntnts' || CHR(47) || TB.CNTNTS_CODE || CHR(47) || 'cntntsView' || TB.CNTNTS_ID || '.do' FROM T_CNTNTS_M01 TB WHERE TB.CNTNTS_ID = MENU_URL)
+				WHEN MENU_TY = 'B' THEN (SELECT CHR(47) || 'cmmn' || CHR(47) || DECODE(MENU_SE, 'A', 'adm', 'usr') || CHR(47) || 'bbs' || CHR(47) || 'ntt' || CHR(47) || TB.BBS_ID || CHR(47) || 'nttList.do' FROM T_BBS_M01 TB WHERE TB.BBS_ID = MENU_URL)
+				ELSE MENU_URL
+			 END AS menuUrl
+			 </when>
+			 <otherwise>
+			 ,MENU_URL AS menuUrl
+			 </otherwise>
+		</choose>
+			,MENU_TARGET AS menuTarget
+			,MENU_ORDR AS menuOrdr
+			,USE_AT as useAt
+			,MENU_ICON_CLASS as menuIconClass
+			,MENU_SE as menuSe
+			,MENU_DP AS menuDp
+			,MENU_TY AS menuTy
+		FROM T_MENU_M01
+		WHERE 1=1
+		<if test='menuSe != null and menuSe != ""'>
+		  AND MENU_SE = #{menuSe}
+		</if>
+		<if test='useAt != null and useAt != ""'>
+		  AND USE_AT = #{useAt}
+		</if>
+		<if test="@egovframework.com.cmm.util.EgovMybaitsUtil@isNotEmpty(menuAuthor)">
+		  AND MENU_AUTHOR = #{menuAuthor}
+		</if>
+		ORDER BY MENU_ORDR
+	</select>
+	
+	<insert id="insertMenu" parameterType="menuVO">
+		<selectKey keyProperty="menuSeqNo" resultType="int" order="AFTER">
+    		SELECT MENU_M01_SEQ1.CURRVAL FROM DUAL
+  		</selectKey>
+  		INSERT INTO T_MENU_M01 
+  		(
+  			MENU_SEQ_NO
+  			,UPPER_SEQ_NO
+  			,MENU_AUTHOR
+  			,MENU_NM
+  			,MENU_URL
+  			,MENU_TARGET
+  			,MENU_ORDR
+  			,USE_AT
+  			,MENU_SE
+  			,MENU_ICON_CLASS
+  			,MENU_DP
+  			,MENU_TY
+  		)
+  		VALUES 
+  		(
+  			MENU_M01_SEQ1.NEXTVAL
+  			,#{upperSeqNo}
+  			,#{menuAuthor}
+  			,#{menuNm}
+  			,#{menuUrl, jdbcType=VARCHAR}
+  			,#{menuTarget}
+  			,#{menuOrdr}
+  			,#{useAt}
+  			,#{menuSe}
+  			,#{menuIconClass, jdbcType=VARCHAR}
+  			,#{menuDp}
+  			,#{menuTy}
+  		)
+	</insert>
+	
+	<insert id="insertHistoryMenu" parameterType="menuVO">
+		INSERT INTO T_MENU_H01
+		(
+			HIST_SEQ_NO
+			,MENU_SEQ_NO
+			,UPPER_SEQ_NO
+  			,MENU_AUTHOR
+  			,MENU_NM
+  			,MENU_URL
+  			,MENU_TARGET
+  			,MENU_ORDR
+  			,USE_AT
+  			,MENU_SE
+  			,MENU_ICON_CLASS
+  			,MENU_DP
+  			,MENU_TY
+  			,HIST_REGIST_DE
+  			,REGIST_ID
+		)
+		SELECT
+			MENU_H01_SEQ1.NEXTVAL AS HIST_SEQ_NO
+			,MENU_SEQ_NO
+			,UPPER_SEQ_NO
+  			,MENU_AUTHOR
+  			,MENU_NM
+  			,MENU_URL
+  			,MENU_TARGET
+  			,MENU_ORDR
+  			,USE_AT
+  			,MENU_SE
+  			,MENU_ICON_CLASS
+  			,MENU_DP
+  			,MENU_TY
+  			,SYSDATE AS HIST_REGIST_DE
+  			,#{registId} AS REGIST_ID
+  		FROM T_MENU_M01
+  		WHERE MENU_SE = #{menuSe}
+	</insert>
+	
+	<insert id="insertOneHistoryMenu" parameterType="egovMap">
+		INSERT INTO T_MENU_H01
+		(
+			HIST_SEQ_NO
+			,MENU_SEQ_NO
+			,UPPER_SEQ_NO
+  			,MENU_AUTHOR
+  			,MENU_NM
+  			,MENU_URL
+  			,MENU_TARGET
+  			,MENU_ORDR
+  			,USE_AT
+  			,MENU_SE
+  			,MENU_ICON_CLASS
+  			,MENU_DP
+  			,MENU_TY
+  			,HIST_REGIST_DE
+  			,REGIST_ID
+		)
+		SELECT 
+			MENU_H01_SEQ1.NEXTVAL AS HIST_SEQ_NO
+			,MENU_SEQ_NO
+			,UPPER_SEQ_NO
+  			,MENU_AUTHOR
+  			,MENU_NM
+  			,MENU_URL
+  			,MENU_TARGET
+  			,MENU_ORDR
+  			,USE_AT
+  			,MENU_SE
+  			,MENU_ICON_CLASS
+  			,MENU_DP
+  			,MENU_TY
+  			,SYSDATE AS HIST_REGIST_DE
+  			,#{value} AS REGIST_ID
+  		FROM T_MENU_M01
+		WHERE MENU_SEQ_NO = #{menuSeqNo}
+	</insert>
+	
+	<update id="updateMenu" parameterType="menuVO">
+		UPDATE T_MENU_M01
+		SET MENU_AUTHOR = #{menuAuthor}
+			,MENU_NM = #{menuNm}
+			,MENU_URL = #{menuUrl, jdbcType=VARCHAR}
+			,MENU_TARGET = #{menuTarget}
+			,USE_AT = #{useAt}
+			,MENU_ICON_CLASS = #{menuIconClass, jdbcType=VARCHAR}
+			,MENU_TY = #{menuTy}
+			<if test="menuDp != 0">
+				,MENU_DP = #{menuDp}
+				,UPPER_SEQ_NO = #{upperSeqNo}
+				,MENU_ORDR = #{menuOrdr}
+			</if>
+		WHERE MENU_SEQ_NO = #{menuSeqNo}
+	</update>
+	
+	<delete id="deleteMenu" parameterType="menuVO">
+		DELETE FROM T_MENU_M01
+		WHERE MENU_SEQ_NO = #{menuSeqNo}
+	</delete>
+
+</mapper>
+

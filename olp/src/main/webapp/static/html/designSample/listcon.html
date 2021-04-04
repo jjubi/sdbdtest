@@ -1,0 +1,58 @@
+<div class="container-fluid">
+	<h1 class="header-title">list Style Guide</h1>
+	<div class="card">
+		<div class="card-body">
+			<h1 class="h1">list 공통</h1>
+			<!-- **************************************************************************** 참고 하세요 ****************************************************************************-->
+			<h3 class="h3">margin</h3>
+			<ul class="list-1st View_content line1">
+				<li>정보내용입니다. 정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.</li>
+				<li>정보내용입니다. 정보내용입니다.정보내용입니다.정보내용입니다.내용이 들어가는 곳입니다.</li>
+				<li>정보내용입니다. 정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.</li>
+				<li>정보내용입니다. 정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.정보내용입니다.</li>
+				<li>정보내용입니다.</li>
+
+			</ul>
+		</div>
+	</div>
+
+</div>
+<script type="text/javascript">
+    function hasOverflown(ele){
+        var res;
+       var cont = $('<div>'+ele.text()+'</div>').css("display", "table")
+       .css("z-index", "-1").css("position", "absolute")
+       .css("font-family", ele.css("font-family"))
+       .css("font-size", ele.css("font-size"))
+       .css("font-weight", ele.css("font-weight")).appendTo('body');
+       res = (cont.width()>ele.width());
+       cont.remove();
+       return res;
+    }
+
+    $(document).ready(function(){
+      $('.View_content li').each(function(){
+          if(hasOverflown($(this))){
+              let viewcon = $('<button type="button" class="btn btn-outline-dark viewcon" title="등록 버튼" style="display:show;">더보기</button>');
+              let closecon = $('<button type="button" class="btn btn-outline-dark closecon" title="접기 버튼" style="display:none;">접기</button>');
+              $(this).append(viewcon);
+              $(this).append(closecon);
+          }
+      });  
+      $('.View_content > li > .viewcon').on('click', function(){
+          $(this).parents('li:eq(0)').addClass("active");
+          $(this).hide();
+          $(this).next().show();
+      });
+
+      $('.View_content > li > .closecon').on('click', function(){
+          $(this).parents('li:eq(0)').removeClass("active");
+          $(this).hide();
+          $(this).prev().show();
+      });
+    })
+
+</script>
+
+
+

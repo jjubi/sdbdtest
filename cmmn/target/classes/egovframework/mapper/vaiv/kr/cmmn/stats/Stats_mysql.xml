@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : Stats.xml 
+  * 상세설명 : 통계 데이터 핸들링
+  * 작성일시 : 2020. 12. 31
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2020. 12. 31.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Stats">
+	<select id="selectLoginLogDayStats" parameterType="egovMap" resultType="egovMap">
+		SELECT
+			A.DATES AS DATES
+			,COUNT(A.LOG_ID) AS LOG_CNT
+		FROM (
+			SELECT CREAT_DT
+					,LOG_ID
+					,TB.dates AS DATES
+			FROM COMTNLOGINLOG TA
+			RIGHT OUTER JOIN (
+				SELECT DATE_FORMAT(@date := DATE_ADD(@date, INTERVAL 1 DAY), '%Y-%m-%d') AS dates 
+				FROM mysql.help_relation, (
+				<choose>
+					<when test='stDate == null or stDate == ""'>
+					<![CDATA[
+						SELECT @date:= DATE_SUB(DATE_SUB(NOW(), INTERVAL 1 MONTH), INTERVAL 1 DAY)
+					]]>
+					</when>
+					<when test='edDate == null or edDate == ""'>
+					<![CDATA[
+						SELECT @date:= DATE_SUB(DATE_SUB(NOW(), INTERVAL 1 MONTH), INTERVAL 1 DAY)
+					]]>
+					</when>
+					<otherwise>
+						SELECT @date:= DATE_SUB(#{stDate}, INTERVAL 1 DAY)
+					</otherwise>
+				</choose>
+				) d 
+				<choose>
+					<when test='stDate == null or stDate == ""'>
+					<![CDATA[
+						WHERE @date BETWEEN @date AND DATE_SUB(NOW(), INTERVAL 1 DAY)
+					]]>
+					</when>
+					<when test='edDate == null or edDate == ""'>
+					<![CDATA[
+						WHERE @date BETWEEN @date AND DATE_SUB(NOW(), INTERVAL 1 DAY)
+					]]>
+					</when>
+					<otherwise>
+						WHERE @date BETWEEN @date AND DATE_SUB(#{edDate}, INTERVAL 1 DAY)
+					</otherwise>
+				</choose>
+			) TB
+			ON (DATE_FORMAT(TA.CREAT_DT, '%Y-%m-%d') = TB.dates)
+			WHERE DATES IS NOT NULL
+		) A
+		GROUP BY A.DATES
+		ORDER BY A.DATES ASC
+	</select>
+	
+	<select id="selectLoginLogMonthStats" parameterType="egovMap" resultType="egovMap">
+		SELECT
+			A.DATES AS DATES
+			,COUNT(A.LOG_ID) AS LOG_CNT
+		FROM (
+			SELECT
+				CREAT_DT
+				,LOG_ID
+				,TB.dates AS DATES
+			FROM COMTNLOGINLOG TA
+			RIGHT OUTER JOIN (
+				SELECT 
+					DATE_FORMAT(@date := DATE_ADD(@date, INTERVAL 1 MONTH), '%Y-%m') AS dates
+				FROM mysql.help_relation, (
+				<choose>
+					<when test='stDate == null or stDate == ""'>
+					<![CDATA[
+						SELECT @date:= DATE_SUB(DATE_SUB(NOW(), INTERVAL 1 YEAR), INTERVAL 1 MONTH)
+					]]>
+					</when>
+					<when test='edDate == null or edDate == ""'>
+					<![CDATA[
+						SELECT @date:= DATE_SUB(DATE_SUB(NOW(), INTERVAL 1 YEAR), INTERVAL 1 MONTH)
+					]]>
+					</when>
+					<otherwise>
+						SELECT @date:= DATE_SUB(#{stDate}, INTERVAL 1 MONTH)
+					</otherwise>
+				</choose>
+				) d
+				<choose>
+					<when test='stDate == null or stDate == ""'>
+					<![CDATA[
+						WHERE @date BETWEEN @date AND DATE_SUB(NOW(), INTERVAL 1 MONTH)
+					]]>
+					</when>
+					<when test='edDate == null or edDate == ""'>
+					<![CDATA[
+						WHERE @date BETWEEN @date AND DATE_SUB(NOW(), INTERVAL 1 MONTH)
+					]]>
+					</when>
+					<otherwise>
+						WHERE @date BETWEEN @date AND DATE_SUB(#{edDate}, INTERVAL 1 MONTH)
+					</otherwise>
+				</choose>
+			) TB
+			ON (DATE_FORMAT(TA.CREAT_DT, '%Y-%m') = TB.dates)
+			WHERE DATES IS NOT NULL
+		) A
+		GROUP BY A.DATES
+		ORDER BY A.DATES ASC
+	</select>
+	
+	<select id="selectLoginLogYearStats" parameterType="egovMap" resultType="egovMap">
+		SELECT
+			A.DATES AS DATES
+			,COUNT(A.LOG_ID) AS LOG_CNT
+		FROM (
+			SELECT
+				CREAT_DT
+				,LOG_ID
+				,TB.dates AS DATES
+			FROM COMTNLOGINLOG TA
+			RIGHT OUTER JOIN (
+				SELECT 
+					DATE_FORMAT(@date := DATE_ADD(@date, INTERVAL 1 YEAR), '%Y') AS dates
+				FROM mysql.help_relation, (
+				<choose>
+					<when test='stDate == null or stDate == ""'>
+					<![CDATA[
+						SELECT @date:= DATE_SUB(DATE_SUB(NOW(), INTERVAL 10 YEAR), INTERVAL 1 YEAR)
+					]]>
+					</when>
+					<when test='edDate == null or edDate == ""'>
+					<![CDATA[
+						SELECT @date:= DATE_SUB(DATE_SUB(NOW(), INTERVAL 10 YEAR), INTERVAL 1 YEAR)
+					]]>
+					</when>
+					<otherwise>
+						SELECT @date:= DATE_SUB(#{stDate}, INTERVAL 1 YEAR)
+					</otherwise>
+				</choose>
+				) d
+				<choose>
+					<when test='stDate == null or stDate == ""'>
+					<![CDATA[
+						WHERE @date BETWEEN @date AND DATE_SUB(NOW(), INTERVAL 1 YEAR)
+					]]>
+					</when>
+					<when test='edDate == null or edDate == ""'>
+					<![CDATA[
+						WHERE @date BETWEEN @date AND DATE_SUB(NOW(), INTERVAL 1 YEAR)
+					]]>
+					</when>
+					<otherwise>
+						WHERE @date BETWEEN @date AND DATE_SUB(#{edDate}, INTERVAL 1 YEAR)
+					</otherwise>
+				</choose>
+			) TB
+			ON (DATE_FORMAT(TA.CREAT_DT, '%Y') = TB.dates)
+			WHERE DATES IS NOT NULL
+		) A
+		GROUP BY A.DATES
+		ORDER BY A.DATES ASC
+	</select>
+	
+	<select id="selectMberTotCntToView" resultType="egovMap">
+		SELECT 
+			USER_SE AS SE
+			,COUNT(*) AS CNT
+		FROM COMVNUSERMASTER
+		WHERE USER_SE IN ('GNR', 'USR')
+		GROUP BY USER_SE
+		ORDER BY USER_SE
+	</select>
+	
+	<select id="selectBbsToNttStats" parameterType="egovMap" resultType="egovMap">
+		SELECT TA.BBS_ID AS BBS_ID
+				,TA.BBS_NM AS BBS_NM
+				,IFNULL(TD.NTT_CNT, 0) AS NTT_CNT
+		FROM T_BBS_M01 TA
+		LEFT OUTER JOIN (
+			SELECT
+				TB.BBS_ID
+				,COUNT(TC.NTT_ID) AS NTT_CNT
+			FROM T_BBS_M01 TB
+			INNER JOIN T_NTT_M01 TC
+			ON (TB.BBS_ID = TC.BBS_ID AND TC.DELETE_AT = 'N')
+			<choose>
+				<when test='stDate == null or stDate == ""'>
+				<![CDATA[
+					WHERE DATE_FORMAT(TC.REGIST_DE, '%Y-%m-%d') >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-%d')
+				]]>
+				</when>
+				<when test='edDate == null or edDate == ""'>
+				<![CDATA[
+					WHERE DATE_FORMAT(TC.REGIST_DE, '%Y-%m-%d') >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-%d')
+				]]>
+				</when>
+				<otherwise>
+					WHERE DATE_FORMAT(TC.REGIST_DE, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{stDate}, '%Y-%m-%d') AND DATE_FORMAT(#{edDate}, '%Y-%m-%d')
+				</otherwise>
+			</choose>
+			GROUP BY BBS_ID
+		) TD
+		ON (TA.BBS_ID = TD.BBS_ID)
+		WHERE TA.DELETE_AT = 'N'
+		ORDER BY BBS_ID
+	</select>
+	
+	<select id="selectBbsToNttAttrCntStats" parameterType="egovMap" resultType="egovMap">
+		SELECT TA.BBS_ID AS BBS_ID
+				,TA.BBS_NM AS BBS_NM
+				,IFNULL(TTA.NTT_SECRET_CNT, 0) AS NTT_SECRET_CNT
+				,IFNULL(TTA.NTT_NOTICE_CNT, 0) AS NTT_NOTICE_CNT
+				,IFNULL(TTA.NTT_LC_INDICT_CNT, 0) AS NTT_LC_INDICT_CNT
+				,IFNULL(TTA.NTT_POPUP_CNT, 0) AS NTT_POPUP_CNT
+		FROM T_BBS_M01 TA
+		LEFT OUTER JOIN (
+			SELECT TB.BBS_ID
+					,COUNT(IF(TC.SECRET_AT='Y', 1, NULL)) AS NTT_SECRET_CNT
+					,COUNT(IF(TC.NOTICE_AT='Y', 1, NULL)) AS NTT_NOTICE_CNT
+					,COUNT(IF(TC.LC_INDICT_AT='Y', 1, NULL)) AS NTT_LC_INDICT_CNT
+					,COUNT(IF(TC.POPUP_AT='Y', 1, NULL)) AS NTT_POPUP_CNT
+			FROM T_BBS_M01 TB
+			INNER JOIN T_NTT_M01 TC
+			ON (TB.BBS_ID = TC.BBS_ID AND TC.DELETE_AT = 'N')
+			<choose>
+				<when test='stDate == null or stDate == ""'>
+				<![CDATA[
+					WHERE DATE_FORMAT(TC.REGIST_DE, '%Y-%m-%d') >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-%d')
+				]]>
+				</when>
+				<when test='edDate == null or edDate == ""'>
+				<![CDATA[
+					WHERE DATE_FORMAT(TC.REGIST_DE, '%Y-%m-%d') >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-%d')
+				]]>
+				</when>
+				<otherwise>
+					WHERE DATE_FORMAT(TC.REGIST_DE, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{stDate}, '%Y-%m-%d') AND DATE_FORMAT(#{edDate}, '%Y-%m-%d')
+				</otherwise>
+			</choose>
+		) TTA
+		ON (TA.BBS_ID = TTA.BBS_ID)
+		WHERE TA.DELETE_AT = 'N'
+		ORDER BY BBS_ID
+	</select>
+
+	<select id="selectMenuUseStats" parameterType="egovMap" resultType="egovMap">
+		SELECT COUNT(TA.TRGET_MENU_NM) AS MENU_CNT
+				,TA.TRGET_MENU_NM
+				,TA.REQUST_URI
+		FROM COMTNSYSLOG TA
+		INNER JOIN (
+			SELECT CASE 
+						WHEN MENU_TY = 'C' THEN (SELECT CONCAT(CHAR(47), 'cmmn', CHAR(47), IF(MENU_SE = 'A', 'adm', 'usr'), CHAR(47), 'cntnts', CHAR(47), TB.CNTNTS_CODE, CHAR(47), 'cntntsView', TB.CNTNTS_ID, '.do') FROM T_CNTNTS_M01 TB WHERE TB.CNTNTS_ID = MENU_URL)
+						WHEN MENU_TY = 'B' THEN (SELECT CONCAT(CHAR(47), IF(MENU_SE = 'A', 'adm', 'usr'), CHAR(47), TB.BBS_ID, CHAR(47), 'selectNttList.do') FROM T_BBS_M01 TB WHERE TB.BBS_ID = MENU_URL)
+						ELSE MENU_URL
+					 END AS MENU_URL
+			FROM T_MENU_M01 IN_TB
+			WHERE MENU_URL IS NOT NULL
+			  AND MENU_URL != ''
+		) TB
+		ON (TA.REQUST_URI = TB.MENU_URL)
+		WHERE TA.PROCESS_SE_CODE = 'PC_M'
+		<choose>
+			<when test='stDate == null or stDate == ""'>
+			<![CDATA[
+				AND DATE_FORMAT(TA.OCCRRNC_DE, '%Y-%m-%d') >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-%d')
+			]]>
+			</when>
+			<when test='edDate == null or edDate == ""'>
+			<![CDATA[
+				AND DATE_FORMAT(TA.OCCRRNC_DE, '%Y-%m-%d') >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-%d')
+			]]>
+			</when>
+			<otherwise>
+				AND DATE_FORMAT(TA.OCCRRNC_DE, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{stDate}, '%Y-%m-%d') AND DATE_FORMAT(#{edDate}, '%Y-%m-%d')
+			</otherwise>
+		</choose>
+		GROUP BY TA.REQUST_URI
+	</select>
+	
+	
+
+</mapper>
+
+
+
+
+
+
+
+
+

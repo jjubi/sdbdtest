@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : Stats.xml 
+  * 상세설명 : 통계 데이터 핸들링
+  * 작성일시 : 2021. 03. 03
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2021. 03. 03.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Stats">
+	<select id="selectLoginLogDayStats" parameterType="egovMap" resultType="egovMap">
+		SELECT
+			A.DATES AS DATES
+			,COUNT(A.LOG_ID) AS LOG_CNT
+		FROM (
+			SELECT TA.CREAT_DT
+					,TA.LOG_ID
+					,TB.DATES
+			FROM COMTNLOGINLOG TA
+			RIGHT OUTER JOIN (
+				SELECT
+					<choose>
+						<when test='stDate == null or stDate == "" or edDate == null or edDate == ""'>
+							TO_CHAR(ADD_MONTHS(SYSDATE, -1) + (LEVEL - 1), 'YYYY-MM-DD') AS DATES
+						</when>
+						<otherwise>
+							TO_CHAR(#{stDate} + (LEVEL - 1), 'YYYY-MM-DD') AS DATES
+						</otherwise>
+					</choose>
+				FROM DUAL
+					<choose>
+						<when test='stDate == null or stDate == "" or edDate == null or edDate == ""'>
+							<![CDATA[ CONNECT BY TO_DATE(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM-DD') + (LEVEL - 1) <= TO_DATE(SYSDATE, 'YYYY-MM-DD') ]]>		
+						</when>
+						<otherwise>
+							<![CDATA[ CONNECT BY TO_DATE(#{stDate}, 'YYYY-MM-DD') + (LEVEL - 1) <= TO_DATE(#{edDate}, 'YYYY-MM-DD') ]]>
+						</otherwise>
+					</choose>
+			) TB
+			ON (TO_CHAR(TA.CREAT_DT, 'YYYY-MM-DD') = TB.DATES)
+			WHERE TB.DATES IS NOT NULL
+		) A
+		GROUP BY A.DATES
+		ORDER BY A.DATES ASC
+	</select>
+	
+	<select id="selectLoginLogMonthStats" parameterType="egovMap" resultType="egovMap">
+		SELECT
+			A.DATES AS DATES
+			,COUNT(A.LOG_ID) AS LOG_CNT
+		FROM (
+			SELECT TA.CREAT_DT
+					,TA.LOG_ID
+					,TB.DATES
+			FROM COMTNLOGINLOG TA
+			RIGHT OUTER JOIN (
+				SELECT
+					<choose>
+						<when test='stDate == null or stDate == "" or edDate == null or edDate == ""'>
+							TO_CHAR(ADD_MONTHS(SYSDATE, -12) + (LEVEL - 1), 'YYYY-MM') AS DATES
+						</when>
+						<otherwise>
+							TO_CHAR(#{stDate} + (LEVEL - 1), 'YYYY-MM') AS DATES
+						</otherwise>
+					</choose>
+				FROM DUAL
+					<choose>
+						<when test='stDate == null or stDate == "" or edDate == null or edDate == ""'>
+							<![CDATA[ CONNECT BY TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'YYYY-MM'), 'YYYY-MM') + (LEVEL - 1) <= TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM'), 'YYYY-MM') ]]>		
+						</when>
+						<otherwise>
+							<![CDATA[ CONNECT BY TO_DATE(#{stDate}, 'YYYY-MM') + (LEVEL - 1) <= TO_DATE(#{edDate}, 'YYYY-MM') ]]>
+						</otherwise>
+					</choose>
+			) TB
+			ON (TO_CHAR(TA.CREAT_DT, 'YYYY-MM') = TB.DATES)
+			WHERE TB.DATES IS NOT NULL
+		) A
+		GROUP BY A.DATES
+		ORDER BY A.DATES ASC
+	</select>
+	
+	<select id="selectLoginLogYearStats" parameterType="egovMap" resultType="egovMap">
+		SELECT
+			A.DATES AS DATES
+			,COUNT(A.LOG_ID) AS LOG_CNT
+		FROM (
+			SELECT TA.CREAT_DT
+					,TA.LOG_ID
+					,TB.DATES
+			FROM COMTNLOGINLOG TA
+			RIGHT OUTER JOIN (
+				SELECT
+					<choose>
+						<when test='stDate == null or stDate == "" or edDate == null or edDate == ""'>
+							TO_CHAR(ADD_MONTHS(SYSDATE, -120) + (LEVEL - 1), 'YYYY') AS DATES
+						</when>
+						<otherwise>
+							TO_CHAR(#{stDate} + (LEVEL - 1), 'YYYY') AS DATES
+						</otherwise>
+					</choose>
+				FROM DUAL
+					<choose>
+						<when test='stDate == null or stDate == "" or edDate == null or edDate == ""'>
+							<![CDATA[ CONNECT BY TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -120), 'YYYY'), 'YYYY') + (LEVEL - 1) <= TO_DATE(TO_CHAR(SYSDATE, 'YYYY'), 'YYYY') ]]>		
+						</when>
+						<otherwise>
+							<![CDATA[ CONNECT BY TO_DATE(#{stDate}, 'YYYY') + (LEVEL - 1) <= TO_DATE(#{edDate}, 'YYYY') ]]>
+						</otherwise>
+					</choose>
+			) TB
+			ON (TO_CHAR(TA.CREAT_DT, 'YYYY') = TB.DATES)
+			WHERE TB.DATES IS NOT NULL
+		) A
+		GROUP BY A.DATES
+		ORDER BY A.DATES ASC
+	</select>
+	
+	<select id="selectMberTotCntToView" resultType="egovMap">
+		SELECT 
+			USER_SE AS SE
+			,COUNT(*) AS CNT
+		FROM COMVNUSERMASTER
+		WHERE USER_SE IN ('GNR', 'USR')
+		GROUP BY USER_SE
+		ORDER BY USER_SE
+	</select>
+	
+	<select id="selectBbsToNttStats" parameterType="egovMap" resultType="egovMap">
+		SELECT TA.BBS_ID AS BBS_ID
+				,TA.BBS_NM AS BBS_NM
+				,NVL(TD.NTT_CNT, 0) AS NTT_CNT
+		FROM T_BBS_M01 TA
+		LEFT OUTER JOIN (
+			SELECT
+				TB.BBS_ID
+				,COUNT(TC.NTT_ID) AS NTT_CNT
+			FROM T_BBS_M01 TB
+			INNER JOIN T_NTT_M01 TC
+			ON (TB.BBS_ID = TC.BBS_ID AND TC.DELETE_AT = 'N')
+			<choose>
+				<when test='stDate == null or stDate == ""'>
+				<![CDATA[
+					WHERE TO_CHAR(TC.REGIST_DE, 'YYYY-MM-DD') >= TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM-DD')
+				]]>
+				</when>
+				<when test='edDate == null or edDate == ""'>
+				<![CDATA[
+					WHERE TO_CHAR(TC.REGIST_DE, 'YYYY-MM-DD') >= TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM-DD')
+				]]>
+				</when>
+				<otherwise>
+					WHERE TO_CHAR(TC.REGIST_DE, 'YYYY-MM-DD') BETWEEN TO_CHAR(#{stDate}, 'YYYY-MM-DD') AND TO_CHAR(#{edDate}, 'YYYY-MM-DD')
+				</otherwise>
+			</choose>
+			GROUP BY TB.BBS_ID
+		) TD
+		ON (TA.BBS_ID = TD.BBS_ID)
+		WHERE TA.DELETE_AT = 'N'
+		ORDER BY TA.BBS_ID
+	</select>
+	
+	<select id="selectBbsToNttAttrCntStats" parameterType="egovMap" resultType="egovMap">
+		SELECT TA.BBS_ID AS BBS_ID
+				,TA.BBS_NM AS BBS_NM
+				,NVL(TTA.NTT_SECRET_CNT, 0) AS NTT_SECRET_CNT
+				,NVL(TTA.NTT_NOTICE_CNT, 0) AS NTT_NOTICE_CNT
+				,NVL(TTA.NTT_LC_INDICT_CNT, 0) AS NTT_LC_INDICT_CNT
+				,NVL(TTA.NTT_POPUP_CNT, 0) AS NTT_POPUP_CNT
+		FROM T_BBS_M01 TA
+		LEFT OUTER JOIN (
+			SELECT TB.BBS_ID
+					,COUNT(DECODE(TC.SECRET_AT, 'Y', 1, NULL)) AS NTT_SECRET_CNT
+					,COUNT(DECODE(TC.NOTICE_AT, 'Y', 1, NULL)) AS NTT_NOTICE_CNT
+					,COUNT(DECODE(TC.LC_INDICT_AT, 'Y', 1, NULL)) AS NTT_LC_INDICT_CNT
+					,COUNT(DECODE(TC.POPUP_AT, 'Y', 1, NULL)) AS NTT_POPUP_CNT
+			FROM T_BBS_M01 TB
+			INNER JOIN T_NTT_M01 TC
+			ON (TB.BBS_ID = TC.BBS_ID AND TC.DELETE_AT = 'N')
+			<choose>
+				<when test='stDate == null or stDate == ""'>
+				<![CDATA[
+					WHERE TO_CHAR(TC.REGIST_DE, 'YYYY-MM-DD') >= TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM-DD')
+				]]>
+				</when>
+				<when test='edDate == null or edDate == ""'>
+				<![CDATA[
+					WHERE TO_CHAR(TC.REGIST_DE, 'YYYY-MM-DD') >= TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM-DD')
+				]]>
+				</when>
+				<otherwise>
+					WHERE TO_CHAR(TC.REGIST_DE, 'YYYY-MM-DD') BETWEEN TO_CHAR(#{stDate}, 'YYYY-MM-DD') AND TO_CHAR(#{edDate}, 'YYYY-MM-DD')
+				</otherwise>
+			</choose>
+			GROUP BY TB.BBS_ID
+		) TTA
+		ON (TA.BBS_ID = TTA.BBS_ID)
+		WHERE TA.DELETE_AT = 'N'
+		ORDER BY TA.BBS_ID
+	</select>
+
+	<select id="selectMenuUseStats" parameterType="egovMap" resultType="egovMap">
+		SELECT COUNT(TA.TRGET_MENU_NM) AS MENU_CNT
+				,TA.TRGET_MENU_NM
+				,TA.REQUST_URI
+		FROM COMTNSYSLOG TA
+		INNER JOIN (
+			SELECT CASE 
+						WHEN MENU_TY = 'C' THEN (SELECT CHR(47) || 'cmmn' || CHR(47) || DECODE(MENU_SE, 'A', 'adm', 'usr') || CHR(47) || 'cntnts' || CHR(47) || TB.CNTNTS_CODE || CHR(47) || 'cntntsView' || TB.CNTNTS_ID || '.do' FROM T_CNTNTS_M01 TB WHERE TB.CNTNTS_ID = MENU_URL)
+						WHEN MENU_TY = 'B' THEN (SELECT CHR(47) || 'cmmn' || CHR(47) || DECODE(MENU_SE, 'A', 'adm', 'usr') || CHR(47) || 'bbs' || CHR(47) || 'ntt' || CHR(47) || TB.BBS_ID || CHR(47) || 'nttList.do' FROM T_BBS_M01 TB WHERE TB.BBS_ID = MENU_URL)
+						ELSE MENU_URL
+					 END AS MENU_URL
+			FROM T_MENU_M01 IN_TB
+			WHERE MENU_URL IS NOT NULL
+		) TB
+		ON (TA.REQUST_URI = TB.MENU_URL)
+		WHERE TA.PROCESS_SE_CODE = 'PC_M'
+		<choose>
+			<when test='stDate == null or stDate == ""'>
+			<![CDATA[
+				AND TO_CHAR(TA.OCCRRNC_DE, 'YYYY-MM-DD') >= TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM-DD')
+			]]>
+			</when>
+			<when test='edDate == null or edDate == ""'>
+			<![CDATA[
+				AND TO_CHAR(TA.OCCRRNC_DE, 'YYYY-MM-DD') >= TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM-DD')
+			]]>
+			</when>
+			<otherwise>
+				AND TO_CHAR(TA.OCCRRNC_DE, 'YYYY-MM-DD') BETWEEN TO_CHAR(#{stDate}, 'YYYY-MM-DD') AND TO_CHAR(#{edDate}, 'YYYY-MM-DD')
+			</otherwise>
+		</choose>
+		GROUP BY TA.REQUST_URI, TA.TRGET_MENU_NM
+	</select>
+	
+
+</mapper>
+
+
+
+
+
+
+
+
+
