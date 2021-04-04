@@ -65,6 +65,10 @@
 		    		<artifactId>commons-logging</artifactId>
 		    		<groupId>commons-logging</groupId>
 		    	</exclusion>
+			    <exclusion>
+		            <artifactId>spring-modules-validation</artifactId>
+		            <groupId>org.springmodules</groupId>
+        		</exclusion>
 		    </exclusions>
         </dependency>
         <dependency>
@@ -72,6 +76,11 @@
 		    <artifactId>egovframework.rte.psl.dataaccess</artifactId>
 		    <version>${egovframework.rte.version}</version>
         </dependency>
+                <dependency>
+		  <groupId>egovframework.rte</groupId>
+		  <artifactId>spring-modules-validation</artifactId>
+		  <version>0.9</version>
+		</dependency>
         <dependency>
 			<groupId>egovframework.rte</groupId>
 			<artifactId>egovframework.rte.fdl.idgnr</artifactId>
