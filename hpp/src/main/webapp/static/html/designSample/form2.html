@@ -1,0 +1,242 @@
+<div class="container-fluid">
+	<h1 class="header-title">등록 및 수정 Style Guide</h1>
+	<div class="card">
+		<div class="card-body">
+			<h1 class="h1">등록 및 수정 공통</h1>
+<!-- **************************************************************************** 참고 하세요 ****************************************************************************-->
+			<div class="card-wrap">
+				<div class="form-horizontal contents-form">
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="subject">게시판명</label>
+						</div>
+						<div class="col-sm-12 col-md-4">
+							<div class="col-md-12">현장사진</div>
+							<input name="siteCode" type="hidden" value="health">
+						</div>
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="cmsNo">번호</label>
+						</div>
+						<div class="col-sm-12 col-md-4">
+							<div class="col-md-12">123</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="siteCode">메뉴코드</label>
+						</div>
+						<div class="col-sm-12 col-md-10">
+							<div class="col-md-12">bbs000000000000</div>
+							<input name="navigation" type="hidden" value="메뉴코드">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="siteCode">메뉴코드</label>
+						</div>
+						<div class="col-sm-12 col-md-10">
+							<div class="col-md-12">
+								<input type="text" class="form-control" aria-label="">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="siteCode">메뉴코드</label>
+						</div>
+						<div class="col-sm-12 col-md-10">
+							<div class="col-md-12">
+								<textarea class="form-control" id="descript" name="descript"
+									title="내용 입력" rows="5">텍스트를 입력하세요.</textarea>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="checkbox1">체크선택</label>
+						</div>
+						<div class="col-sm-12 col-md-10">
+							<div class="col-md-12">
+								<div class="input-group">
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input"
+											id="save-info"> <label class="custom-control-label"
+											for="save-info">컨텐츠 출력하기</label>
+									</div>
+								</div>
+								<div class="input-group">
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input"
+											id="save-info2"> <label class="custom-control-label"
+											for="save-info2">컨텐츠 출력안하기하기</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="checkbox1">체크출력</label>
+						</div>
+						<div class="col-sm-12 col-md-10">
+							<div class="col-md-12 col-lg-12">
+								<label class="checkbox-inline" for="checkbox1"><input
+									type="checkbox" id="checkbox1" name="" title="" value="">출력</label>
+								<label class="checkbox-inline" for="checkbox2"><input
+									type="checkbox" id="checkbox2" name="" title="" value="">안함</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="radiobox1">라디오출력</label>
+						</div>
+						<div class="col-sm-12 col-md-10">
+							<div class="col-md-12 col-lg-12">
+								<label class="radio-inline" for="radiobox1"><input
+									type="radio" id="radiobox1" name="" title="출력 여부" value="Y">출력</label>
+								<label class="radio-inline" for="radiobox2"><input
+									type="radio" id="radiobox2" name="" title="출력 여부" value="N">안함</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="list01">목록 선택</label>
+						</div>
+						<div class="col-sm-12 col-md-10">
+							<div class="input-group">
+								<select class="custom-select" id="list01">
+									<option selected>선택하세요.</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="list01">목록 선택</label>
+						</div>
+						<div class="col-sm-12 col-md-10">
+							<div class="input-group col-sm-">
+								<select class="custom-select" id="inputGroupSelect02">
+									<option selected>개수 선택</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+								<div class="input-group-append">
+									<label class="input-group-text" for="inputGroupSelect02">개</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="list01">목록 선택</label>
+						</div>
+						<div class="col-sm-12 col-md-4">
+							<div class="input-group col-sm-">
+								<select class="custom-select" id="inputGroupSelect02">
+									<option selected>개수 선택</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="list01">목록 선택</label>
+						</div>
+						<div class="col-sm-12 col-md-4">
+							<div class="input-group col-sm-">
+								<select class="custom-select" id="inputGroupSelect02">
+									<option selected>개수 선택</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="list01">목록 선택</label>
+						</div>
+						<div class="col-sm-12 col-md-10">
+							<div class="input-group">
+								<select class="custom-select" id="list01">
+									<option selected>선택하세요.</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="fileload">파일등록</label>
+						</div>
+						<div class="col-sm-12 col-md-10">
+							<div class="input-group">
+								<div class="custom-file">
+									<input type="file" class="custom-file-input"
+										id="inputGroupFile02"> <label
+										class="custom-file-label" for="inputGroupFile02">파일
+										찾아보기</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 col-md-2 control-label col-lg-2">
+							<label for="fileload">파일등록</label>
+						</div>
+						<div class="col-sm-12 col-md-10">
+							<div class="form-imgbox">
+								<div class="form-imgbox_file">
+									<div class="custom-file">
+										<input type="file" class="custom-file-input"
+											id="inputGroupFile02"> <label
+											class="custom-file-label" for="inputGroupFile02">파일
+											찾아보기</label>
+									</div>
+								</div>
+								<div class="form-imgbox_btn">
+									<button type="button" class="btn btn-danger" title="삭제 버튼">삭제</button>
+									<button type="button" class="btn btn-warning" title="수정 버튼">수정</button>
+									<button type="button" class="btn btn-primary" title="업로드 버튼">업로드</button>
+									<button type="button" class="btn btn-info" title="안내 버튼">안내</button>
+									<button type="button" class="btn btn-success" title="추가 버튼">추가</button>
+									<button type="button" class="btn btn-secondary" title="다운로드 버튼">
+										<i class="fas fa-arrow-alt-circle-down"></i> 다운로드
+									</button>
+									<button type="submit" class="btn btn-basic" title="등록 버튼">
+										<i class="fa fa-save" aria-hidden="true"></i> 등록
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-wrap-footer">
+				<button type="button" class="btn btn-outline-secondary"
+					title="목록 버튼">
+					<i class="fa fa-list-ul" aria-hidden="true"></i> 목록
+				</button>
+				<div class="right">
+					<button type="submit" class="btn btn-basic" title="등록 버튼">
+						<i class="fa fa-save" aria-hidden="true"></i> 등록
+					</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+

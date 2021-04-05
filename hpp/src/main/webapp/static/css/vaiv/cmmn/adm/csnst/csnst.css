@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+.satisfaction {
+    padding: 28px 28px 17px;
+    border: 1px solid #c5cfd6;
+    border-radius: 5px;
+    position: relative;
+    background: #fff;
+}
+
+fieldset {
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.satisfaction .satisfaction_box {
+    padding-left: 50px;
+    background: url('./../../../../../images/vaiv/cmmn/com/csnst/csnst_box.png') no-repeat;
+    position: relative;
+}
+
+.satisfaction .satisfaction_box label {
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.satisfaction .satisfaction_box input[type=text] {
+    width: 50%;
+    top: 38px;
+    min-width: auto;
+    height: 30px;
+    border: 1px solid #ddd;
+    padding-left: 10px;
+    font-size: 14px;
+}
+
+.satisfaction .satisfaction_box input[type=button], .satisfaction .satisfaction_box input[type=submit] {
+    display: inline-block;
+    overflow: visible;
+    height: 30px;
+    margin: 0;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 3px;
+    background: #024da1;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+}

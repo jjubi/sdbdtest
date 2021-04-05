@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : Qestnar.xml 
+  * 상세설명 : 설문조사 데이터 핸들링
+  * 작성일시 : 2020. 12. 31
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2020. 12. 31.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Qestnar">
+	<select id="selectQestnarList" parameterType="qestnarSearchVO" resultType="qestnarVO">
+		SELECT 
+			 TD.QESTNAR_SEQ_NO  AS qestnarSeqNo 
+		    ,TD.QESTNAR_NM  AS qestnarNm 
+		    ,TD.QESTNAR_PRFACE  AS qestnarPrface 
+		    ,TD.QESTNAR_CNCLSN  AS qestnarCnclsn 
+		    ,DATE_FORMAT(TD.QESTNAR_BGNDE, '%Y-%m-%d')  AS qestnarBgnde 
+		    ,DATE_FORMAT(TD.QESTNAR_ENDDE, '%Y-%m-%d')  AS qestnarEndde 
+		    ,TD.QESTNAR_TRGET  AS qestnarTrget 
+		    ,TD.QESTNAR_DPLCT_AT AS qestnarDplctAt
+		    ,QESTNAR_PGE_AT AS qestnarPgeAt
+			,(SELECT COUNT(*) FROM T_QESTNAR_TRGET_M01 TC WHERE TC.QESTNAR_SEQ_NO = TD.QESTNAR_SEQ_NO) AS qestnarTrgetCnt
+		    ,TD.USE_AT AS useAt
+			,DATE_FORMAT(TD.REGIST_DE, '%Y-%m-%d') AS registDe
+			,TD.REGIST_ID AS registId
+			,DATE_FORMAT(TD.UPDT_DE, '%Y-%m-%d') AS updtDe
+			,TD.UPDT_ID AS updtId
+		    ,(SELECT TA.QESTN_SEQ_NO FROM T_QESTNAR_QESTN_M01 TA WHERE TA.QESTNAR_SEQ_NO = TD.QESTNAR_SEQ_NO AND TA.USE_AT = 'Y' AND TA.QESTN_ORDR = '1' ORDER BY TA.QESTN_ORDR LIMIT 1) AS firstQestnSeqNo 
+		    ,(SELECT TB.QESTN_SEQ_NO FROM T_QESTNAR_QESTN_M01 TB WHERE TB.QESTNAR_SEQ_NO = TD.QESTNAR_SEQ_NO AND TB.USE_AT = 'Y' ORDER BY TB.QESTN_ORDR DESC LIMIT 1) AS lastQestnSeqNo
+		    ,(SELECT COUNT(*) FROM T_QESTNAR_RESULT_M01 TE WHERE TE.QESTNAR_SEQ_NO = TD.QESTNAR_SEQ_NO AND TE.RSPNS_COMPT_AT = 'Y') AS qestnarResultCnt
+		FROM T_QESTNAR_M01 TD
+		WHERE TD.DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND QESTNAR_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+        <if test="searchCondition == 5">
+		  AND TD.USE_AT = #{searchKeyword}
+        </if>
+        <if test='qestnarPdCheckYn == "Y"'>
+		  AND DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(TD.QESTNAR_BGNDE, '%Y-%m-%d') AND DATE_FORMAT(TD.QESTNAR_ENDDE, '%Y-%m-%d')
+        </if>
+        ORDER BY TD.REGIST_DE DESC 
+        <include refid="cmmn.Common.common-paging"></include>
+	</select>
+
+	<select id="selectQestnarListTotCnt" parameterType="qestnarSearchVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_QESTNAR_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND QESTNAR_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+        <if test="searchCondition == 5">
+		  AND USE_AT = #{searchKeyword}
+        </if>
+        <if test='qestnarPdCheckYn == "Y"'>
+		  AND DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(QESTNAR_BGNDE, '%Y-%m-%d') AND DATE_FORMAT(QESTNAR_ENDDE, '%Y-%m-%d')
+        </if>
+	</select>
+	
+	<insert id="insertQestnar" parameterType="qestnarVO">
+		INSERT INTO T_QESTNAR_M01
+		(
+		    QESTNAR_NM 
+		    ,QESTNAR_PRFACE 
+		    ,QESTNAR_CNCLSN 
+		    ,QESTNAR_BGNDE 
+		    ,QESTNAR_ENDDE 
+		    ,QESTNAR_TRGET
+		    ,QESTNAR_DPLCT_AT 
+		    ,QESTNAR_PGE_AT
+		    ,USE_AT
+		    ,DELETE_AT 
+		    ,REGIST_DE 
+		    ,REGIST_ID 
+		    ,UPDT_DE 
+		    ,UPDT_ID 
+		)
+		VALUES
+		(
+			#{qestnarNm} 
+		    ,#{qestnarPrface} 
+		    ,#{qestnarCnclsn}
+		    ,#{qestnarBgnde}
+		    ,#{qestnarEndde} 
+		    ,#{qestnarTrget} 
+		    ,#{qestnarDplctAt}
+		    ,#{qestnarPgeAt}
+		    ,#{useAt}
+		    ,'N' 
+		    ,NOW() 
+		    ,#{registId} 
+		    ,NOW() 
+		    ,#{updtId}
+		)
+		<selectKey keyProperty="qestnarSeqNo" resultType="string" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<insert id="insertQestnarTrget" parameterType="qestnarTrgetVO">
+		INSERT INTO T_QESTNAR_TRGET_M01
+		(
+			QESTNAR_SEQ_NO
+			,ESNTL_ID
+			,MBER_NM
+			,REGIST_DE	
+		)
+		VALUES
+		(
+			#{qestnarSeqNo}
+			,#{esntlId}
+			,#{mberNm}
+			,NOW()	
+		)
+	</insert>
+	
+	<delete id="deleteQestnarTrget" parameterType="qestnarTrgetVO">
+		DELETE FROM T_QESTNAR_TRGET_M01
+		WHERE QESTNAR_SEQ_NO = #{qestnarSeqNo}
+	</delete>
+	
+	<select id="selectQestnar" parameterType="qestnarSearchVO" resultType="qestnarVO">
+		SELECT 
+			 QESTNAR_SEQ_NO  AS qestnarSeqNo 
+		    ,QESTNAR_NM  AS qestnarNm 
+		    ,QESTNAR_PRFACE  AS qestnarPrface 
+		    ,QESTNAR_CNCLSN  AS qestnarCnclsn 
+		    ,DATE_FORMAT(QESTNAR_BGNDE, '%Y-%m-%d')  AS qestnarBgnde 
+		    ,DATE_FORMAT(QESTNAR_ENDDE, '%Y-%m-%d')  AS qestnarEndde 
+		    ,QESTNAR_TRGET  AS qestnarTrget 
+		    ,QESTNAR_DPLCT_AT AS qestnarDplctAt
+		    ,QESTNAR_PGE_AT AS qestnarPgeAt
+		    <include refid="cmmn.Common.common-column1"></include>
+		    ,(SELECT TA.QESTN_SEQ_NO FROM T_QESTNAR_QESTN_M01 TA WHERE TA.QESTNAR_SEQ_NO = #{qestnarSeqNo} AND TA.USE_AT = 'Y' AND TA.QESTN_ORDR = '1' ORDER BY TA.QESTN_ORDR LIMIT 1) AS firstQestnSeqNo 
+		    ,(SELECT TB.QESTN_SEQ_NO FROM T_QESTNAR_QESTN_M01 TB WHERE TB.QESTNAR_SEQ_NO = #{qestnarSeqNo} AND TB.USE_AT = 'Y' ORDER BY TB.QESTN_ORDR DESC LIMIT 1) AS lastQestnSeqNo
+		    ,(SELECT COUNT(*) FROM T_QESTNAR_RESULT_M01 TE WHERE TE.QESTNAR_SEQ_NO = #{qestnarSeqNo} AND TE.RSPNS_COMPT_AT = 'Y') AS qestnarResultCnt
+		FROM T_QESTNAR_M01
+		WHERE DELETE_AT = 'N'
+		  AND QESTNAR_SEQ_NO = #{qestnarSeqNo}
+	</select>
+	
+	<select id="selectQestnarTrgetList" parameterType="qestnarSearchVO" resultType="qestnarTrgetVO">
+		SELECT
+			QESTNAR_SEQ_NO AS qestnarSeqNo 
+			,ESNTL_ID AS esntlId
+			,MBER_NM AS mberNm
+			,DATE_FORMAT(REGIST_DE, '%Y-%m-%d') AS registDe
+		FROM T_QESTNAR_TRGET_M01
+		WHERE QESTNAR_SEQ_NO = #{qestnarSeqNo}
+	</select>
+	
+	<update id="updateQestnar" parameterType="qestnarVO">
+		UPDATE T_QESTNAR_M01
+		SET QESTNAR_NM = #{qestnarNm}
+		    ,QESTNAR_PRFACE = #{qestnarPrface}
+		    ,QESTNAR_CNCLSN = #{qestnarCnclsn}
+		    ,QESTNAR_BGNDE = #{qestnarBgnde}
+		    ,QESTNAR_ENDDE = #{qestnarEndde}
+		    ,QESTNAR_TRGET = #{qestnarTrget}
+		    ,QESTNAR_DPLCT_AT = #{qestnarDplctAt}
+			,QESTNAR_PGE_AT = #{qestnarPgeAt}
+		    ,USE_AT = #{useAt}
+		    ,UPDT_DE = NOW() 
+		    ,UPDT_ID = #{updtId} 
+		WHERE DELETE_AT = 'N'
+		  AND QESTNAR_SEQ_NO = #{qestnarSeqNo} 
+	</update>
+	
+	<update id="deleteQestnar" parameterType="qestnarVO">
+		UPDATE T_QESTNAR_M01
+		SET DELETE_AT = 'Y'
+			,UPDT_DE = NOW() 
+		    ,UPDT_ID = #{updtId} 
+		WHERE DELETE_AT = 'N'
+		  AND QESTNAR_SEQ_NO = #{qestnarSeqNo}
+	</update>
+	
+	<select id="selectQestnarTargetList" parameterType="hMap" resultType="egovMap">
+		SELECT
+			USER_ID AS userId
+			,USER_NM AS userNm
+			,ESNTL_ID AS uniqId
+			,USER_SE AS userSe
+		FROM COMVNUSERMASTER
+		ORDER BY USER_SE 
+        <if test='pagingYn != "N"'>
+        	LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+        </if>
+	</select>
+	
+	<select id="selectQestnarTargetListTotCnt" parameterType="hMap" resultType="int">
+		SELECT COUNT(*)
+		FROM COMVNUSERMASTER
+	</select>
+ 
+	<select id="selectQestnarResult" parameterType="qestnarResultVO" resultType="qestnarResultVO">
+		SELECT
+			QESTNAR_SEQ_NO AS qestnarSeqNo
+			,QESTNAR_RESULT_SEQ_NO AS qestnarResultSeqNo
+			,RSPNS_COMPT_AT AS rspnsComptAt
+			,RSPNS_COMPT_DE AS rspnsComptDe
+			,REGIST_DE AS registDe
+			,REGIST_ID AS registId
+			,UPDT_DE AS updtDe
+			,UPDT_ID AS updtId
+		FROM T_QESTNAR_RESULT_M01
+		WHERE QESTNAR_SEQ_NO = #{qestnarSeqNo}
+		  AND REGIST_ID = #{registId}
+	  	<if test='rspnsComptAt != "" and rspnsComptAt != null'>
+	  	  AND RSPNS_COMPT_AT = #{rspnsComptAt}
+	  	</if>
+	</select>
+	
+	<insert id="insertQestnarResult" parameterType="qestnarResultVO">
+		INSERT INTO T_QESTNAR_RESULT_M01
+		(
+			QESTNAR_SEQ_NO
+			,RSPNS_COMPT_AT
+			,RSPNS_COMPT_DE
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+		)
+		VALUES
+		(
+			#{qestnarSeqNo}
+			,#{rspnsComptAt}
+			,NOW()
+			,NOW()
+			,#{registId}
+			,NOW()
+			,#{updtId}
+		)
+		<selectKey keyProperty="qestnarResultSeqNo" resultType="string" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<update id="updateQestnarResult" parameterType="qestnarResultVO">
+		UPDATE T_QESTNAR_RESULT_M01
+		SET	UPDT_DE = NOW()
+			,UPDT_ID = #{updtId}
+			,RSPNS_COMPT_AT = #{rspnsComptAt}
+			<if test='rspnsComptAt == "Y"'>
+				,RSPNS_COMPT_DE = NOW()
+			</if>
+		WHERE QESTNAR_RESULT_SEQ_NO = #{qestnarResultSeqNo} 
+	</update> 
+	
+	<insert id="insertQestnarResultDtl" parameterType="qestnarSenarioDtlVO">
+		INSERT INTO T_QESTNAR_RESULT_D01
+		(
+			QESTNAR_RESULT_SEQ_NO
+			,QESTN_SEQ_NO
+			,QESTN_RESULT_CN
+			,QESTN_ETC_RESULT_CN
+			,REGIST_DE
+		)
+		VALUES
+		(
+			#{qestnarResultSeqNo}
+			,#{qestnSeqNo}
+			,#{qestnResultCn}
+			,#{qestnEtcResultCn}
+			,NOW()
+		)
+	</insert>
+
+	<select id="selectQestnarResultStat" parameterType="egovMap" resultType="egovMap">
+		<![CDATA[
+		SELECT TA.QESTN_SEQ_NO
+				,TA.QESTN_TY
+				,TA.QESTN_SJ
+				,TA.QESTN_HPCM
+				,TA.QESTN_ESSNTL_AT
+				,TA.QESTN_ORDR
+				,TA.QESTN_PGE
+				,TA.REGIST_DE
+				,TD.ASWPER_SEQ_NO
+				,TD.ASWPER_TEXT
+				,TD.ASWPER_SCORE
+				,TD.ASWPER_ETC_AT
+				,GROUP_CONCAT(TB.QESTN_RESULT_CN SEPARATOR ';') AS QESTN_RESULT_CN
+				,GROUP_CONCAT(TB.QESTN_ETC_RESULT_CN SEPARATOR ';') AS QESTN_ETC_RESULT_CN
+				,COUNT(*) AS TOT_RSPNS_CNT
+		FROM T_QESTNAR_QESTN_M01 TA
+		LEFT OUTER JOIN (
+			SELECT GROUP_CONCAT(TDI.ASWPER_SEQ_NO SEPARATOR ';') AS ASWPER_SEQ_NO
+					,GROUP_CONCAT(TDI.ASWPER_TEXT SEPARATOR ';') AS ASWPER_TEXT
+					,GROUP_CONCAT(TDI.ASWPER_SCORE SEPARATOR ';') AS ASWPER_SCORE
+					,GROUP_CONCAT(TDI.ASWPER_ETC_AT SEPARATOR ';') AS ASWPER_ETC_AT
+					,TDI.QESTN_SEQ_NO
+			FROM T_QESTNAR_QESTN_ASWPER_M01 TDI
+			GROUP BY TDI.QESTN_SEQ_NO
+		) TD
+		ON (TA.QESTN_SEQ_NO = TD.QESTN_SEQ_NO)
+		LEFT OUTER JOIN (
+			SELECT TBI1.QESTNAR_SEQ_NO
+					,TBI1.REGIST_ID
+					,TBI2.QESTN_SEQ_NO
+					,TBI2.QESTN_RESULT_CN
+					,TBI2.QESTN_ETC_RESULT_CN
+			FROM T_QESTNAR_RESULT_M01 TBI1
+			INNER JOIN T_QESTNAR_RESULT_D01 TBI2
+			ON (TBI1.QESTNAR_RESULT_SEQ_NO = TBI2.QESTNAR_RESULT_SEQ_NO)
+			WHERE TBI1.RSPNS_COMPT_AT = 'Y'
+		) TB
+		ON (TA.QESTN_SEQ_NO = TB.QESTN_SEQ_NO)
+		WHERE TA.QESTNAR_SEQ_NO = #{qestnarSeqNo}
+		GROUP BY TA.QESTN_SEQ_NO
+		ORDER BY QESTN_PGE, QESTN_ORDR
+		]]>
+		<!-- 
+		SELECT TA.QESTN_SEQ_NO
+				,TA.QESTN_TY
+				,TA.QESTN_SJ
+				,TA.QESTN_HPCM
+				,TA.QESTN_ESSNTL_AT
+				,TA.QESTN_ORDR
+				,TA.QESTN_PGE
+				,TA.REGIST_DE
+				,TB.QESTN_RESULT_CN
+				,TB.QESTN_ETC_RESULT_CN
+		FROM T_QESTNAR_QESTN_M01 TA
+		LEFT OUTER JOIN (
+			SELECT TBI1.QESTNAR_SEQ_NO
+					,TBI1.REGIST_ID
+					,TBI2.QESTN_SEQ_NO
+					,TBI2.QESTN_RESULT_CN
+					,TBI2.QESTN_ETC_RESULT_CN
+			FROM T_QESTNAR_RESULT_M01 TBI1
+			INNER JOIN T_QESTNAR_RESULT_D01 TBI2
+			ON (TBI1.QESTNAR_RESULT_SEQ_NO = TBI2.QESTNAR_RESULT_SEQ_NO)
+			WHERE TBI1.RSPNS_COMPT_AT = 'Y'
+		) TB
+		ON (TA.QESTN_SEQ_NO = TB.QESTN_SEQ_NO)
+		WHERE TA.QESTNAR_SEQ_NO = #{qestnarSeqNo}
+		ORDER BY QESTN_PGE, QESTN_ORDR -->
+	</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+

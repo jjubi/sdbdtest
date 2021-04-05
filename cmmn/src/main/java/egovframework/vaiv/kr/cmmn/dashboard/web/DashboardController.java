@@ -20,8 +20,6 @@ import com.mongodb.DBCollection;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import egovframework.vaiv.kr.cmmn.common.util.Loggable;
-import egovframework.vaiv.kr.cmmn.banner.service.BannerService;
-import egovframework.vaiv.kr.cmmn.banner.service.BannerVO;
 import egovframework.vaiv.kr.cmmn.bbs.ntt.service.NttService;
 import egovframework.vaiv.kr.cmmn.popup.service.PopupService;
 import egovframework.vaiv.kr.cmmn.popup.service.PopupVO;
@@ -55,9 +53,6 @@ public class DashboardController extends Loggable{
 	@Resource(name="NttService")
 	private NttService nttService;
 	
-	/* 배너 서비스 선언 */
-	@Resource(name="BannerService")
-	private BannerService bannerService;
 	
 	/* 팝업 서비스 선언 */
 	@Resource(name="PopupService")
@@ -87,11 +82,6 @@ public class DashboardController extends Loggable{
 //			System.out.println(maps);
 			//총 게시물 수
 			model.addAttribute("nttTotCnt", nttService.selectNttListTotCntNonBbsId());
-			//총 배너 수
-			BannerVO selectBnrVO = new BannerVO();
-			selectBnrVO.setPdCondition("Y");
-			selectBnrVO.setUseAt("Y");
-			model.addAttribute("bnrTotCnt", bannerService.selectBannerListTotCnt(selectBnrVO));
 			//총 팝업 수
 			PopupVO selectPopupVO = new PopupVO();
 			selectPopupVO.setPdCondition("Y");

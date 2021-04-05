@@ -18,7 +18,6 @@ import org.springmodules.validation.commons.DefaultBeanValidator;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import egovframework.vaiv.kr.cmmn.banner.service.BannerVO;
 import egovframework.vaiv.kr.cmmn.comCode.service.ComCodeService;
 import egovframework.vaiv.kr.cmmn.common.util.Loggable;
 import egovframework.vaiv.kr.cmmn.popup.service.PopupService;

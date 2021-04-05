@@ -1,0 +1,243 @@
+<div class="container-fluid">
+	<h1 class="header-title">버튼 Style Guide</h1>
+	<div class="card">
+		<div class="card-body">
+			<h1 class="h1">버튼 공통</h1>
+<!-- **************************************************************************** 참고 하세요 ****************************************************************************-->
+			<h3 class="h3">기본 버튼</h3>
+			<div>
+				<button type="button" class="btn btn-danger" title="삭제 버튼">삭제</button>
+				<button type="button" class="btn btn-warning" title="수정 버튼">수정</button>
+				<button type="button" class="btn btn-primary" title="업로드 버튼">업로드</button>
+				<button type="button" class="btn btn-info" title="안내 버튼">안내</button>
+				<button type="button" class="btn btn-dark" title="확인 버튼">확인</button>
+				<button type="button" class="btn btn-success" title="추가 버튼">추가</button>
+				<button type="button" class="btn btn-outline-secondary"
+					title="닫기 버튼">닫기</button>
+				<button type="button" class="btn btn-outline-link" title="바로가기 버튼">
+					바로가기 <i class="fas fa-external-link-alt"></i>
+				</button>
+				<button type="button" class="btn btn-secondary" title="다운로드 버튼">
+					<i class="fas fa-arrow-alt-circle-down"></i> 다운로드
+				</button>
+				<button type="submit" class="btn btn-basic" title="등록 버튼">
+					<i class="fa fa-save" aria-hidden="true"></i> 등록
+				</button>
+				<button type="button" class="btn btn-outline-secondary"
+					title="목록 버튼">
+					<i class="fa fa-list-ul" aria-hidden="true"></i> 목록
+				</button>
+				<button type="button" class="btn btn-dark" title="조회 버튼">
+					<i class="fa fa-search" aria-hidden="true"></i> 조회
+				</button>
+			</div>
+
+			<div class="btn-group">
+				<button type="button" class="btn btn-basic dropdown-toggle"
+					data-toggle="dropdown" aria-expanded="false">
+					목록 <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu" style="">
+					<li><a class="dropdown-item" href="#">수정</a></li>
+					<li><a class="dropdown-item" href="#">권한</a></li>
+					<li><a class="dropdown-item" href="#">게시판타입</a></li>
+					<li class="dropdown-divider"></li>
+					<li><a class="dropdown-item" href="#">게시판타입</a></li>
+				</ul>
+			</div>
+			<h3 class="h3">검색 폼 상단 버튼</h3>
+			<div class="solidbox">
+				<ul>
+					<li>상단 버튼은 항상 그룹형태 <u class="color-red">div class="btn-group"</u> 으로 감싸주세요.
+					</li>
+					<li>상단에 있는 버튼들은 <u class="color-red">btn-sm</u> 클래스를 추가해 주시면 작은 버튼으로 변경됩니다.
+					</li>
+				</ul>
+			</div>
+			<div class="top-button">
+				<div class="btn-group">
+					<button type="button" class="btn btn-danger" title="삭제 버튼">삭제</button>
+					<button type="button" class="btn btn-warning" title="수정 버튼">수정</button>
+					<button type="button" class="btn btn-primary" title="업로드 버튼">업로드</button>
+					<button type="button" class="btn btn-info" title="안내 버튼">안내</button>
+					<button type="button" class="btn btn-dark" title="확인 버튼">확인</button>
+					<button type="button" class="btn btn-success" title="추가 버튼">추가</button>
+					<button type="button" class="btn btn-outline-secondary"
+						title="닫기 버튼">닫기</button>
+					<button type="button" class="btn btn-outline-link" title="바로가기 버튼">
+						바로가기 <i class="fas fa-external-link-alt"></i>
+					</button>
+					<button type="button" class="btn btn-secondary" title="다운로드 버튼">
+						<i class="fas fa-arrow-alt-circle-down"></i> 다운로드
+					</button>
+					<button type="submit" class="btn btn-basic" title="등록 버튼">
+						<i class="fa fa-save" aria-hidden="true"></i> 등록
+					</button>
+				</div>
+			</div>
+			<div class="ui program-search"
+				title="이 레이아웃은 하단 정보를 대한 검색 정보로 구성되어 있습니다.">
+				<div class="search_inner2 clearfix text-right">
+					<div class="search-select">
+						<span> <select id="searchCondition" name="searchCondition"
+							class="form-control">
+								<option value="1">이름</option>
+						</select>
+						</span>
+					</div>
+
+					<div class="search-text">
+						<span> <input id="searchKeyword" name="searchKeyword"
+							class="form-control" title="검색어 입력" placeholder="검색어를 입력해 주세요"
+							type="text" value="" maxlength="50">
+						</span>
+					</div>
+					<div class="search-btn">
+						<button type="button" class="btn btn-dark btn-sm" title="조회 버튼">
+							<i class="fa fa-search" aria-hidden="true"></i> 조회
+						</button>
+					</div>
+				</div>
+			</div>
+
+
+			<h3 class="h3">상세페이지 하단 버튼</h3>
+			<div class="solidbox">
+				<ul>
+					<li>목록보기는 항상 왼쪽으로 고정</li>
+					<li><u class="color-red">div class="card-wrap-footer"</u> 으로 감싸주세요.</li>
+				</ul>
+			</div>
+			<div class="card-wrap-footer">
+				<button type="button" class="btn btn-outline-secondary"
+					title="목록 버튼">
+					<i class="fa fa-list-ul" aria-hidden="true"></i> 목록
+				</button>
+				<div class="right">
+					<button type="submit" class="btn btn-warning" title="수정 버튼">수정</button>
+					<button type="submit" class="btn btn-danger" title="삭제 버튼">삭제</button>
+				</div>
+			</div>
+
+			<h3 class="h3">테이블 안 버튼</h3>
+			<div class="solidbox">
+				<ul>
+					<li>테이블 안에 버튼은 항상 작게!!!</li>
+					<li>버튼들은 <u class="color-red">btn-sm</u> 클래스를 추가해 주시면 작은 버튼으로 변경됩니다.
+					</li>
+				</ul>
+			</div>
+			<div class="table-responsive text-center">
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>번호</th>
+							<th>유형</th>
+							<th>게시판코드</th>
+							<th>게시판명</th>
+							<th>출력여부</th>
+							<th>비고</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>15</td>
+							<td>일반</td>
+							<td>BBS_00000000</td>
+							<td>공지사항</td>
+							<td>N</td>
+							<td>
+								<button type="button" class="btn btn-danger btn-sm"
+									title="삭제 버튼">삭제</button>
+								<button type="button" class="btn btn-warning btn-sm"
+									title="수정 버튼">수정</button>
+								<button type="button" class="btn btn-primary btn-sm"
+									title="업로드 버튼">업로드</button>
+							</td>
+						</tr>
+						<tr>
+							<td>14</td>
+							<td>일반</td>
+							<td>BBS_00000000</td>
+							<td>공지사항</td>
+							<td>N</td>
+							<td>
+								<button type="button" class="btn btn-info btn-sm" title="안내 버튼">안내</button>
+								<button type="button" class="btn btn-dark btn-sm" title="확인 버튼">확인</button>
+								<button type="button" class="btn btn-success btn-sm"
+									title="추가 버튼">추가</button>
+							</td>
+						</tr>
+						<tr>
+							<td>13</td>
+							<td>일반</td>
+							<td>BBS_00000000</td>
+							<td>공지사항</td>
+							<td>N</td>
+							<td>
+								<button type="button" class="btn btn-outline-secondary btn-sm">닫기</button>
+								<button type="button" class="btn btn-outline-link btn-sm"
+									title="바로가기 버튼">
+									바로가기 <i class="fas fa-external-link-alt"></i>
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td>12</td>
+							<td>일반</td>
+							<td>BBS_00000000</td>
+							<td>공지사항</td>
+							<td>N</td>
+							<td>
+								<button type="button" class="btn btn-secondary btn-sm"
+									title="다운로드 버튼">
+									<i class="fas fa-arrow-alt-circle-down"></i> 다운로드
+								</button>
+								<button type="submit" class="btn btn-basic btn-sm" title="등록 버튼">
+									<i class="fa fa-save" aria-hidden="true"></i> 등록
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td>12</td>
+							<td>일반</td>
+							<td>BBS_00000000</td>
+							<td>공지사항</td>
+							<td>N</td>
+							<td>
+								<div class="btn-group">
+									<button type="button"
+										class="btn btn-basic btn-sm dropdown-toggle"
+										data-toggle="dropdown">
+										목록 <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li><a class="dropdown-item" href="#">수정</a></li>
+										<li><a class="dropdown-item" href="#">권한</a></li>
+										<li><a class="dropdown-item" href="#">게시판타입</a></li>
+										<li class="dropdown-divider"></li>
+										<li><a class="dropdown-item" href="#">게시판타입</a></li>
+									</ul>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<h3 class="h3">전체넓이 버튼</h3>
+			<div class="solidbox">
+				<ul>
+					<li>전체넓이 버튼이 필요한 경우 사용해 주세요.</li>
+					<li><u class="color-red">btn-block</u> 클래스를 추가해 주시면 전체 버튼으로 변경됩니다.</li>
+				</ul>
+			</div>
+			<div>
+				<button type="button" class="btn btn-basic btn-block" title="등록 버튼">등록</button>
+				<button type="button" class="btn btn-light btn-block" title="확인 버튼">확인</button>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+

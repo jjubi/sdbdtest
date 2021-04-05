@@ -1,0 +1,111 @@
+@charset "UTF-8";
+
+#error_pg{
+
+}
+/*error*/
+#error_pg>.error{ 
+    margin: 30px auto;
+    text-align: center;
+    background: url('./../../../images/error/error_bg.png')no-repeat top;
+    padding-top: 270px;
+}
+#error_pg>.error>h2.error_tit{
+    background: url('./../../../images/error/error_tit.png')no-repeat top;
+    height: 60px;
+    text-indent: -9999px;
+}
+#error_pg>.error>p{
+    font-size: 17px;
+    line-height: 1.6em;
+}
+#error_pg>.error>.btn{
+    padding: 0;
+    display: block;
+    margin: 30px 0;
+}
+#error_pg>.error>.btn>a{
+    display: block;
+    background: #2857a7 url('./../../../images/error/button.png')no-repeat 90%;
+    border-radius: 15px;
+    padding: 10px 20px;
+    width: 300px;
+    margin: 0 auto;
+    text-align: left;
+    color: #fff;
+    font-weight: 500;
+    font-size: 17px;
+}
+/*접근제한*/
+#error_pg>.error02{ 
+    margin: 30px auto;
+    text-align: center;
+    background: url('./../../../images/error/error02_bg.png')no-repeat top;
+    padding-top: 270px;
+}
+#error_pg>.error02>h2.error02_tit{
+    background: url('./../../../images/error/error02_tit.png')no-repeat top;
+    height: 60px;
+    text-indent: -9999px;
+}
+#error_pg>.error02>.btn{
+    padding: 0;
+    display: block;
+    margin: 30px 0;
+}
+
+#error_pg>.error02>p{
+    font-size: 17px;
+    line-height: 1.6em;
+}
+#error_pg>.error02>.btn>a{
+    display: block;
+    background: #2857a7 url('./../../../images/error/button.png')no-repeat 90%;
+    border-radius: 15px;
+    padding: 10px 20px;
+    width: 300px;
+    margin: 0 auto;
+    text-align: left;
+    color: #fff;
+    font-weight: 500;
+    font-size: 17px;
+}
+@media (max-width: 510px) {
+    #error_pg>.error{
+        padding-top: 230px;
+        background-size: contain;
+    }
+}
+
+@media (max-width: 410px) {
+    #error_pg>.error{
+        padding-top: 170px;
+        background-size: contain;
+        margin: 20px;
+    }
+    #error_pg>.error>h2.error_tit{
+        height: 60px;
+        text-indent: -9999px;
+        background-size: 200px;
+    }
+    /*접근제한*/
+    #error_pg>.error02{ 
+        margin: 30px auto;
+        text-align: center;
+        padding-top: 150px;
+        background-size: 200px;
+    }
+    #error_pg>.error02>h2.error02_tit{
+        height: 40px;
+        text-indent: -9999px;
+        background-size: 300px;
+    }
+    #error_pg>.error>.btn,#error_pg>.error02>.btn{
+        margin: 10px 0;
+    }
+    #error_pg>.error>.btn>a,#error_pg>.error02>.btn>a{
+        background: #2857a7 ;
+        width: 200px;
+    }
+    
+}

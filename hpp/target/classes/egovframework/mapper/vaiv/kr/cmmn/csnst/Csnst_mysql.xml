@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : Csnst.xml 
+  * 상세설명 : 데이터 핸들링 만족도조사 기능
+  * 작성일시 : 2020. 12. 31
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2020. 12. 31.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Csnst">
+	<resultMap type="csnstVO" id="csnstMap">
+		<result column="CSNST_SEQ_NO" property="csnstSeqNo"/>
+		<result column="MENU_NM" property="menuNm"/>
+		<result column="MENU_SEQ_NO" property="menuSeqNo"/>
+		<result column="CSNST_DC" property="csnstDc"/>
+		<result column="PGE_URL" property="pgeUrl"/>
+		<result column="BBS_ID" property="bbsId"/>
+		<result column="BBS_NM" property="bbsNm"/>
+		<result column="NTT_ID" property="nttId"/>
+		<result column="NTT_SJ" property="nttSj"/>
+		<result column="CNTNTS_ID" property="cntntsId"/>
+		<result column="CNTNTS_NM" property="cntntsNm"/>
+		<result column="CONECT_IP" property="conectIp"/>
+		<result column="CSNST_SCORE" property="csnstScore"/>
+		<result column="REGIST_DE" property="registDe"/>
+		<result column="REGIST_ID" property="registId"/>
+	</resultMap>
+	
+	<insert id="insertCsnst" parameterType="csnstVO">
+		INSERT INTO T_CSNST_M01
+		(
+			MENU_NM
+			,MENU_SEQ_NO
+			,CSNST_DC
+			,PGE_URL
+			,BBS_ID
+			,NTT_ID
+			,CNTNTS_ID
+			,CONECT_IP
+			,CSNST_SCORE
+			,REGIST_DE
+			,REGIST_ID
+		)
+		VALUES 
+		(
+			#{menuNm}
+			,#{menuSeqNo}
+			,#{csnstDc}
+			,#{pgeUrl}
+			,#{bbsId}
+			,#{nttId}
+			,#{cntntsId}
+			,#{conectIp}
+			,#{csnstScore}
+			,NOW()
+			,#{registId}
+		)
+	</insert>
+	
+	<select id="selectCsnstList" parameterType="csnstVO" resultMap="csnstMap">
+		SELECT
+			TA.CSNST_SEQ_NO
+			,TA.MENU_NM
+			,TA.MENU_SEQ_NO
+			,TA.CSNST_DC
+			,TA.PGE_URL
+			,TA.BBS_ID
+			,TB.BBS_NM
+			,TA.NTT_ID
+			,TC.NTT_SJ
+			,TA.CNTNTS_ID
+			,TD.CNTNTS_NM
+			,TA.CONECT_IP
+			,TA.CSNST_SCORE
+			,DATE_FORMAT(TA.REGIST_DE, '%Y-%m-%d %H:%i') AS REGIST_DE
+			,TA.REGIST_ID
+		FROM T_CSNST_M01 TA
+		LEFT OUTER JOIN T_BBS_M01 TB
+		ON (TA.BBS_ID = TB.BBS_ID AND TB.DELETE_AT = 'N')
+		LEFT OUTER JOIN T_NTT_M01 TC
+		ON (TA.NTT_ID = TC.NTT_ID AND TC.DELETE_AT = 'N')
+		LEFT OUTER JOIN T_CNTNTS_M01 TD
+		ON (TA.CNTNTS_ID = TD.CNTNTS_ID AND TD.DELETE_AT = 'N')
+		WHERE 1=1
+		<if test="searchCondition == 1">
+			AND TA.MENU_NM LIKE CONCAT('%', #{searchKeyword}, '%') 
+		</if>
+		<if test="searchCondition == 2">
+			AND TA.CSNST_DC LIKE CONCAT('%', #{searchKeyword}, '%') 
+		</if>
+		<if test="searchCondition == 3">
+			AND TA.CSNST_SCORE = #{searchKeyword} 
+		</if>
+		<if test='menuSeqNo != null and menuSeqNo != ""'>
+			AND TA.MENU_SEQ_NO = #{menuSeqNo} 
+		</if>
+		<if test='menuNm != null and menuNm != ""'>
+			AND TA.MENU_NM = #{menuNm} 
+		</if>
+		<if test='pgeUrl != null and pgeUrl != ""'>
+			AND TA.PGE_URL = #{pgeUrl} 
+		</if>
+		<if test='bbsId != null and bbsId != ""'>
+			AND TA.BBS_ID = #{bbsId} 
+		</if>
+		<if test='nttId != null and nttId != ""'>
+			AND TA.NTT_ID = #{nttId} 
+		</if>
+		<if test='cntntsId != null and cntntsId != ""'>
+			AND TA.CNTNTS_ID = #{cntntsId} 
+		</if>
+		ORDER BY TA.CSNST_SEQ_NO DESC
+		<include refid="cmmn.Common.common-paging" />
+	</select>
+	
+	<select id="selectCsnstListTotCnt" parameterType="csnstVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_CSNST_M01
+		WHERE 1=1
+		<if test="searchCondition == 1">
+			AND MENU_NM LIKE CONCAT('%', #{searchKeyword}, '%') 
+		</if>
+		<if test="searchCondition == 2">
+			AND CSNST_DC LIKE CONCAT('%', #{searchKeyword}, '%') 
+		</if>
+		<if test="searchCondition == 3">
+			AND CSNST_SCORE = #{searchKeyword} 
+		</if>
+		<if test='menuSeqNo != null and menuSeqNo != ""'>
+			AND MENU_SEQ_NO = #{menuSeqNo} 
+		</if>
+		<if test='pgeUrl != null and pgeUrl != ""'>
+			AND PGE_URL = #{pgeUrl} 
+		</if>
+		<if test='bbsId != null and bbsId != ""'>
+			AND BBS_ID = #{bbsId} 
+		</if>
+		<if test='nttId != null and nttId != ""'>
+			AND NTT_ID = #{nttId} 
+		</if>
+		<if test='cntntsId != null and cntntsId != ""'>
+			AND CNTNTS_ID = #{cntntsId} 
+		</if>
+	</select>
+	
+
+</mapper>
+
+
+
+

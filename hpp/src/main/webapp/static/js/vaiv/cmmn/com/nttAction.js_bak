@@ -1,0 +1,346 @@
+var mtype;
+var bbsId;
+var bbsAuthMap;
+var userAuthList;
+var nowLocationPathname = location.pathname;
+var fnListJson = { "selectNttList" : "Y", "fileDown" : "Y", "selectNtt" : "Y", "secretSelectNtt" : "Y", "insertForm" : "Y", "answerForm" : "N", "updateForm" : "N", "deleteNtt" : "N" };
+var fnListJson2 = { "selectNttList" : "Y", "fileDown" : "Y", "selectNtt" : "Y", "secretSelectNtt" : "Y", "insertForm" : "Y", "answerForm" : "N", "updateForm" : "Y", "deleteNtt" : "Y" };
+var fnViewJson = { "selectNttList" : "Y", "fileDown" : "Y", "selectNtt" : "N", "secretSelectNtt" : "N", "insertForm" : "N", "answerForm" : "Y", "updateForm" : "Y", "deleteNtt" : "Y" };
+var fnRegistJson = { "selectNttList" : "Y", "fileDown" : "N", "selectNtt" : "N", "secretSelectNtt" : "N", "insertForm" : "N", "answerForm" : "N", "updateForm" : "N", "deleteNtt" : "N" };
+var fnUpdateJson = { "selectNttList" : "Y", "fileDown" : "Y", "selectNtt" : "N", "secretSelectNtt" : "N", "insertForm" : "N", "answerForm" : "N", "updateForm" : "N", "deleteNtt" : "N" };
+var fnList;
+if(nowLocationPathname.indexOf('/insertNtt.do') > -1){
+	//등록일 경우
+	fnList = fnRegistJson;
+} else if(nowLocationPathname.indexOf('/updateNtt.do') > -1) {
+	//수정일 경우
+	fnList = fnUpdateJson;
+} else if(nowLocationPathname.indexOf('/selectNtt.do') > -1) {
+	//상세일 경우
+	fnList = fnViewJson;
+} else if(nowLocationPathname.indexOf('/selectNttList.do') > -1) {
+	//목록일 경우
+	fnList = fnListJson;
+}
+
+if(nowLocationPathname.indexOf('/selectNttList.do') > -1 && $('input[name="nowBbsTyId"]').val() == 'BBST_00002'){
+	fnList = fnListJson2;
+}
+
+
+$(document).ready(function(){
+	mtype = $('#mtype').val();
+	bbsId = $('#nowBbsId').val();
+	
+	bbsAuthMap = loadBbsAuthList(bbsId);
+	if(bbsAuthMap != ''){
+		userAuthList = bbsAuthMap.authorities;
+	}
+	
+	$('.searchBtn').click(function(){
+		document.listForm.pageIndex.value = 1;
+	});
+	
+	if(nowLocationPathname.indexOf('/insertNtt.do') > -1){
+		//등록일 경우
+		setInsertJqueryFn();
+	} else if(nowLocationPathname.indexOf('/updateNtt.do') > -1) {
+		//수정일 경우
+		setUpdateJqueryFn();
+	}
+});
+
+function setUpdateJqueryFn(){
+	if(bbsId == 'BBS_000000XXXXXX'){
+		//해당 게시판 특수한 로직이 있는 경우 ID별로 로직 추가
+	} else {
+		$('#nttUpdateBtn').click(function(){
+			Swal.fire({
+				icon : 'info',
+				title: '수정하시겠습니까?',
+				showCancelButton: true,
+				confirmButtonText: '수정',
+				allowOutsideClick: false,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					let nttForm = document.getElementById("nttVO");
+					//옵션 체크
+					//답글이 있을 경우 공지글 안됨
+					if($('#nttAnswerYn').val() == 'Y' && $('input[name="noticeAt"]:checked').val() == 'Y'){
+						Swal.fire('확인', '답글이 있을 경우 공지글 설정을 할 수 없습니다.', 'warning');
+						return false;
+					}
+					//공지글 / 비밀글 동시 사용 못함
+					if($('input[name="noticeAt"]').length > 0 && $('input[name="secretAt"]').length > 0){
+						if($('input[name="noticeAt"]:checked').val() == 'Y' && $('input[name="secretAt"]:checked').val() == 'Y'){
+							Swal.fire('확인', '공지글은 비밀글로 사용할 수 없습니다.', 'warning');
+							return false;
+						}
+					}
+					//비밀글 사용 시 Key 체크
+					if($('input[name="secretAt"]').length > 0){
+						if($('input[name="secretAt"]:checked').val() == 'Y'){
+							let secretKey = $('#secretKey').val();
+							
+							if(secretKey == ''){
+								Swal.fire('확인', '비밀글 Key를 확인하세요.', 'warning');
+								return false;
+							} 
+						}
+					}
+					//위치표시 사용 시 주소 체크
+					if($('input[name="lcIndictAt"]').length > 0){
+						if($('input[name="lcIndictAt"]:checked').val() == 'Y'){
+							let adres = $('#adres').val();
+							
+							if(adres == ''){
+								Swal.fire('확인', '주로를 확인하세요.', 'warning');
+								return false;
+							} 
+						}
+					}
+					//금지 단어 체크
+					//제목
+					if(!checkPrhibtWrd(nttForm.nttSj.value)){
+						return false;
+					}
+					//내용
+					if(!checkPrhibtWrd(nttForm.nttCn.value)){
+						return false;
+					}
+					
+					if(!validateNttVO(nttForm)){
+						return false;
+					} else {
+						nttForm.submit();
+					}
+				}
+			});
+		});
+	}
+}
+
+function setInsertJqueryFn(){
+	if(bbsId == 'BBS_000000XXXXXX'){
+		//해당 게시판 특수한 로직이 있는 경우 ID별로 로직 추가
+	} else {
+		//게시글 등록 일반적인 등록 로직
+		$('#nttRegistBtn').click(function(){
+			Swal.fire({
+				icon : 'info',
+				title: '등록하시겠습니까?',
+				showCancelButton: true,
+				confirmButtonText: '등록',
+				allowOutsideClick: false,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					let nttForm;
+					if($('#nttAnswerVO').length > 0){
+						nttForm = document.getElementById("nttAnswerVO");
+					} else {
+						nttForm = document.getElementById("nttVO");
+					}
+					//옵션 체크
+					//공지글 / 비밀글 동시 사용 못함
+					if($('input[name="noticeAt"]').length > 0 && $('input[name="secretAt"]').length > 0){
+						if($('input[name="noticeAt"]:checked').val() == 'Y' && $('input[name="secretAt"]:checked').val() == 'Y'){
+							Swal.fire('확인', '공지글은 비밀글로 사용할 수 없습니다.', 'warning');
+							return false;
+						}
+					}
+					//비밀글 사용 시 Key 체크
+					if($('input[name="secretAt"]').length > 0){
+						if($('input[name="secretAt"]:checked').val() == 'Y'){
+							let secretKey = $('#secretKey').val();
+							
+							if(secretKey == ''){
+								Swal.fire('확인', '비밀글 Key를 확인하세요.', 'warning');
+								return false;
+							} 
+						}
+					}
+					//위치표시 사용 시 주소 체크
+					if($('input[name="lcIndictAt"]').length > 0){
+						if($('input[name="lcIndictAt"]:checked').val() == 'Y'){
+							let adres = $('#adres').val();
+							
+							if(adres == ''){
+								Swal.fire('확인', '주소를 확인하세요.', 'warning');
+								return false;
+							} 
+						}
+					}
+					//금지 단어 체크
+					//제목
+					if(!checkPrhibtWrd(nttForm.nttSj.value)){
+						return false;
+					}
+					//내용
+					if(!checkPrhibtWrd(nttForm.nttCn.value)){
+						return false;
+					} 
+					
+					if(!validateNttVO(nttForm)){
+						return false;
+					} else {
+						nttForm.submit();
+					}
+				}
+			});
+		});
+	}
+}
+
+if(fnList.selectNttList == 'Y'){
+	function fnSelectNttList(page){
+		if(page != null && page != '' && page != undefined){
+			document.listForm.pageIndex.value = page;
+		}
+		if($('#listForm').length > 0){
+			let listForm = document.getElementById("listForm");
+			listForm.action = "/"+mtype+"/"+bbsId+"/selectNttList.do";
+			listForm.submit();
+		} else {
+			let searchForm = document.getElementById("hiddenSearchForm");
+			searchForm.action = "/"+mtype+"/"+bbsId+"/selectNttList.do";
+			searchForm.submit();
+		}
+	}
+}
+if(fnList.fileDown == 'Y'){
+	function fnFileDown(fileId, fileSn){
+		let fileDownAuth = bbsAuthMap.bbsAuthVO.nttFileDwldAuthor;
+		if(arrayContain(fileDownAuth, userAuthList)){
+			location.href="/cmm/fms/FileDown.do?atchFileId="+fileId+"&fileSn="+fileSn;
+		} else {
+			Swal.fire('확인', '파일 다운로드 권한이 없습니다.', 'warning');
+			return false;
+		}
+	}
+}
+if(fnList.selectNtt == 'Y'){
+	function fnSelectNtt(id){
+		let nttRedngAuthor = bbsAuthMap.bbsAuthVO.nttRedngAuthor;
+		if(arrayContain(nttRedngAuthor, userAuthList)){
+			document.listForm.nttId.value = id;
+			document.listForm.action = "/"+mtype+"/"+bbsId+"/selectNtt.do";
+		    document.listForm.submit();
+		} else {
+			Swal.fire('확인', '조회 권한이 없습니다.', 'warning');
+			return false;
+		}
+	}
+}
+if(fnList.insertForm == 'Y'){
+	function fnInsertForm(){
+		let nttRegistAuthor = bbsAuthMap.bbsAuthVO.nttRegistAuthor;
+		if(arrayContain(nttRegistAuthor, userAuthList)){
+			location.href = "/"+mtype+"/"+bbsId+"/insertNtt.do";
+		} else {
+			Swal.fire('확인', '등록 권한이 없습니다.', 'warning');
+			return false;
+		}
+	}
+}
+if(fnList.secretSelectNtt == 'Y'){
+	function fnSecretSelectNtt(id, secretKey){
+		let nttRedngAuthor = bbsAuthMap.bbsAuthVO.nttRedngAuthor;
+		if(arrayContain(nttRedngAuthor, userAuthList)){
+			Swal.fire({
+				title: '비밀키를 입력하세요.',
+				input: 'text',
+				showCancelButton: true,
+				confirmButtonText: '확인',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					if(result.value == secretKey){
+						document.listForm.nttId.value = id;
+						document.listForm.action = "/"+mtype+"/"+bbsId+"/selectNtt.do";
+					    document.listForm.submit();
+					} else {
+						Swal.fire('확인', '비밀번호가 틀렸습니다.', 'warning');
+						return false;
+					}
+				}
+			});
+		} else {
+			Swal.fire('확인', '조회 권한이 없습니다.', 'warning');
+			return false;
+		}
+	}
+}
+if(fnList.deleteNtt == 'Y'){
+	function fnDeleteNtt(nttId){
+		let nttDeleteAuthor = bbsAuthMap.bbsAuthVO.nttDeleteAuthor;
+		if(arrayContain(nttDeleteAuthor, userAuthList)){
+			Swal.fire({
+				icon : 'warning',
+				title: '삭제하시겠습니까?',
+				text: '답글이 있을 경우 같이 삭제 됩니다.',
+				showCancelButton: true,
+				confirmButtonText: '삭제',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					let frm = $('<form></form>');
+					frm.attr('method', 'post');
+					frm.attr('action', "/"+mtype+"/"+bbsId+"/deleteNtt.do");
+					frm.append('<input type="hidden" name="nttId" value="'+nttId+'">');
+					$(document.body).append(frm);
+					frm.submit();
+				}
+			});
+		} else {
+			Swal.fire('확인', '삭제 권한이 없습니다.', 'warning');
+			return false;
+		}
+	}
+}
+if(fnList.answerForm == 'Y'){
+	function fnAnswerWrt(nttId){
+		let answerRegistAuthor = bbsAuthMap.bbsAuthVO.answerRegistAuthor;
+		if(arrayContain(answerRegistAuthor, userAuthList)){
+			location.href="/"+mtype+"/"+bbsId+"/answer/insertNtt.do?nttId="+nttId;
+		} else {
+			Swal.fire('확인', '답글 등록 권한이 없습니다.', 'warning');
+			return false;
+		}
+		
+	}
+}
+if(fnList.updateForm == 'Y'){
+	function fnUpdateNtt(nttId){
+		let nttUpdtAuthor = bbsAuthMap.bbsAuthVO.nttUpdtAuthor;
+		if(arrayContain(nttUpdtAuthor, userAuthList)){
+			location.href="/"+mtype+"/"+bbsId+"/updateNtt.do?nttId="+nttId;
+		} else {
+			Swal.fire('확인', '수정 권한이 없습니다.', 'warning');
+			return false;
+		}
+	}
+}
+
+
+function loadBbsAuthList(bbsId){
+	let authMap = "";
+	$.ajax({
+		url : '/loadBbsAuthList.do',
+		type : 'post',
+		dataType : 'json',
+		async : false,
+		data : {"bbsId" : bbsId},
+		success : function(data){
+			if(data.result == 'success'){
+				authMap = data.authMap;
+			} else {
+				Swal.fire('확인', '게시판 권한 조회를 실패했습니다. 관리자에게 문의해주세요.', 'error');
+				authMap = "";
+			}
+		}, error : function(error){
+			Swal.fire('확인', '게시판 권한 조회를 실패했습니다. 관리자에게 문의해주세요.', 'error');
+			authMap = "";
+		}
+	});
+	
+	return authMap;
+}
+

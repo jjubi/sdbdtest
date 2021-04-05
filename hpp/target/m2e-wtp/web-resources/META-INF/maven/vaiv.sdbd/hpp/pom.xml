@@ -7,4 +7,12 @@
   </parent>
   <artifactId>hpp</artifactId>
   <packaging>war</packaging>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>vaiv.sdbd</groupId>
+  		<artifactId>cmmn</artifactId>
+  		<version>1.0.0</version>
+  	</dependency>
+  </dependencies>
 </project>

@@ -27,34 +27,6 @@
             </field>
         </form>
     </formset>
-    <!-- 배너 관리 -->
-    <formset>
-        <form name="bannerVO">
-        	<field property="bannerNm" depends="required, maxlength">
-                <arg0 key="배너 명" resource="true"/>
-                <arg1 key="50" resource="true"/>
-				<var>
-				<var-name>maxlength</var-name>
-				<var-value>50</var-value>
-				</var>
-            </field>
-        	<field property="bannerUrl" depends="required, maxlength">
-                <arg0 key="배너 URL" resource="true"/>
-                <arg1 key="400" resource="true"/>
-				<var>
-				<var-name>maxlength</var-name>
-				<var-value>400</var-value>
-				</var>
-            </field>
-        	<field property="bannerTy" depends="required">
-                <arg0 key="배너 유형" resource="true"/>
-            </field>
-        	<field property="bannerOrdr" depends="required, integer">
-                <arg0 key="배너 순서" resource="true"/>
-            </field>
-        	
-        </form>
-	</formset>
 	<!-- 팝업 관리 -->
     <formset>
         <form name="popupVO">

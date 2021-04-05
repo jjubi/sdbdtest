@@ -35,7 +35,6 @@
 		<typeAlias alias="cntntsHisVO"    	    type="egovframework.vaiv.kr.cmmn.cntnts.service.CntntsHisVO"/>
 		<typeAlias alias="sysCmptnVO" 	 	    type="egovframework.vaiv.kr.cmmn.sys.cmptn.service.SysCmptnVO"/>
 		<typeAlias alias="prhibtWrdVO" 			type="egovframework.vaiv.kr.cmmn.prhibtWrd.service.PrhibtWrdVO"/>
-		<typeAlias alias="bannerVO" 			type="egovframework.vaiv.kr.cmmn.banner.service.BannerVO"/>
 		<typeAlias alias="popupVO" 				type="egovframework.vaiv.kr.cmmn.popup.service.PopupVO"/>
 		<typeAlias alias="qestnarSearchVO"		type="egovframework.vaiv.kr.cmmn.qestnar.common.SearchVO"/>
 		<typeAlias alias="qestnarVO" 			type="egovframework.vaiv.kr.cmmn.qestnar.service.QestnarVO"/>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : Common.xml 
+  * 상세설명 : 데이터 핸들링 공통 기능
+  * 작성일시 : 2021. 03. 03
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2021. 03. 03.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Common">
+	
+	<sql id="common-paging-top">
+		<if test='pagingYn != "N"'>
+			SELECT * FROM ( SELECT rownum rn, TZZ.* FROM (
+		</if>
+	</sql>
+	
+	<sql id="common-paging-bottom">
+		<if test='pagingYn != "N"'>
+        	) TZZ ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+        </if>
+	</sql>
+	
+	<sql id="common-column1">
+		,USE_AT AS useAt
+		,TO_CHAR(REGIST_DE, 'YYYY-MM-DD') AS registDe
+		,REGIST_ID AS registId
+		,TO_CHAR(UPDT_DE, 'YYYY-MM-DD') AS updtDe
+		,UPDT_ID AS updtId
+	</sql>
+	
+	<sql id="common-column2">
+		,USE_AT AS useAt
+		,TO_CHAR(REGIST_DE, 'YYYY-MM-DD') AS registDe
+		,TO_CHAR(UPDT_DE, 'YYYY-MM-DD') AS updtDe
+	</sql>
+
+</mapper>
+
+
+
+

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : ComCode.xml 
+  * 상세설명 : 공통코드 데이터 핸들링
+  * 작성일시 : 2020. 12. 31
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2020. 12. 31.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.ComCode">
+
+	<select id="checkCodeDplct" parameterType="string" resultType="int">
+		SELECT COUNT(*)
+		FROM T_CMMN_CODE_M01
+		WHERE CODE = #{value}
+	</select>
+	
+	<insert id="insertComCode" parameterType="comCodeVO">
+		INSERT INTO T_CMMN_CODE_M01
+		(
+			GROUP_CODE
+			,CODE
+			,CODE_VALUE
+			,CODE_NM
+			,CODE_ORDR
+			,REGIST_DE
+			,UPDT_DE
+			,USE_AT
+			,DELETE_AT
+		)
+		VALUES
+		(
+			#{groupCode}
+			,#{code}
+			,#{codeValue}
+			,#{codeNm}
+			,#{codeOrdr}
+			,NOW()
+			,NOW()
+			,#{useAt}
+			,'N'
+		)
+	</insert>
+	
+	<select id="selectComCode" parameterType="comCodeVO" resultType="comCodeVO">
+		SELECT
+			GROUP_CODE AS groupCode
+			,CODE AS code
+			,CODE_VALUE AS codeValue
+			,CODE_NM AS codeNm
+			,CODE_ORDR AS codeOrdr
+			<include refid="cmmn.Common.common-column2"></include>
+		FROM T_CMMN_CODE_M01
+		WHERE DELETE_AT = 'N'
+		  AND CODE = #{code}
+		<if test='useAt != null and useAt != ""'>
+	      AND USE_AT = #{useAt}
+		</if>
+	</select>
+	
+	<update id="updateComCode" parameterType="comCodeVO">
+		UPDATE T_CMMN_CODE_M01
+		SET UPDT_DE = NOW()
+			,GROUP_CODE = #{groupCode}
+			,CODE_VALUE = #{codeValue}
+			,CODE_NM = #{codeNm}
+			,CODE_ORDR = #{codeOrdr}
+			,USE_AT = #{useAt}
+		WHERE DELETE_AT = 'N'
+		  AND CODE = #{code}
+	</update>
+	
+	<update id="deleteComCode" parameterType="comCodeVO">
+		UPDATE T_CMMN_CODE_M01
+		SET UPDT_DE = NOW()
+			,DELETE_AT = 'Y'
+			,CODE = CONCAT('DEL_', CODE, '_', DATE_FORMAT(NOW(), '%y%m%d%H%i%s'))
+		WHERE DELETE_AT = 'N'
+		  AND CODE = #{code}
+	</update>
+	
+	<select id="selectComCodeList" parameterType="comCodeVO" resultType="comCodeVO">
+		SELECT
+			TA.GROUP_CODE AS groupCode
+			,TA.CODE AS code
+			,TA.CODE_VALUE AS codeValue
+			,TA.CODE_NM AS codeNm
+			,TA.CODE_ORDR AS codeOrdr
+			,TA.USE_AT AS useAt
+			,DATE_FORMAT(TA.REGIST_DE, '%Y-%m-%d') AS registDe
+			,DATE_FORMAT(TA.UPDT_DE, '%Y-%m-%d') AS updtDe
+			,TA.RM_1 AS rm_1
+		FROM T_CMMN_CODE_M01 TA
+		INNER JOIN T_CMMN_GROUP_CODE_M01 TB
+		ON (TA.GROUP_CODE = TB.GROUP_CODE AND TB.DELETE_AT = 'N' AND TB.USE_AT = 'Y')
+		WHERE TA.DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND TA.GROUP_CODE LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 2">
+		  AND TA.CODE LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 3">
+		  AND TA.CODE_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+        <if test='groupCode != null and groupCode != ""'>
+      	  AND TA.GROUP_CODE = #{groupCode}
+        </if>
+        <if test='useAt != null and useAt != ""'>
+      	  AND TA.USE_AT = #{useAt}
+        </if>
+        ORDER BY TA.REGIST_DE DESC 
+        <include refid="cmmn.Common.common-paging"></include>
+	</select>
+	
+	<select id="selectComCodeListTotCnt" parameterType="comCodeVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_CMMN_CODE_M01 TA
+		INNER JOIN T_CMMN_GROUP_CODE_M01 TB
+		ON (TA.GROUP_CODE = TB.GROUP_CODE AND TB.DELETE_AT = 'N' AND TB.USE_AT = 'Y')
+		WHERE TA.DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND TA.GROUP_CODE LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 2">
+		  AND TA.CODE LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+		<if test="searchCondition == 3">
+		  AND TA.CODE_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+	</select>
+	
+</mapper>
+
+
+
+

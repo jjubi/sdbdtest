@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : PrhibtWrd.xml 
+  * 상세설명 : 금지단어 데이터 핸들링
+  * 작성일시 : 2021. 03. 03
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2021. 03. 03.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.PrhibtWrd">
+	<select id="selectPrhibtWrdList" parameterType="prhibtWrdVO" resultType="prhibtWrdVO">
+		<include refid="cmmn.Common.common-paging-top"/>
+		SELECT
+			PRHIBT_WRD_SEQ_NO AS prhibtWrdSeqNo
+			,PRHIBT_WRD AS prhibtWrd  
+			<include refid="cmmn.Common.common-column1"></include>
+		FROM T_PRHIBT_WRD_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND PRHIBT_WRD LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test='useAt != null and useAt != ""'>
+          AND USE_AT = #{useAt}
+        </if>
+        ORDER BY REGIST_DE DESC
+        <include refid="cmmn.Common.common-paging-bottom"/>
+	</select>
+	
+	<select id="selectPrhibtWrdListTotCnt" parameterType="prhibtWrdVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_PRHIBT_WRD_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND PRHIBT_WRD LIKE '%' || #{searchKeyword} || '%'
+        </if>
+        <if test='useAt != null and useAt != ""'>
+          AND USE_AT = #{useAt}
+        </if>
+	</select>
+	
+	<select id="checkDupPrhibtWrd" parameterType="prhibtWrdVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_PRHIBT_WRD_M01
+		WHERE DELETE_AT = 'N'
+		  AND PRHIBT_WRD = #{prhibtWrd}
+		  <if test='prhibtWrdSeqNo != null and prhibtWrdSeqNo != ""'>
+		  AND PRHIBT_WRD_SEQ_NO != #{prhibtWrdSeqNo}
+		  </if>
+	</select>
+	
+	<insert id="insertPrhibtWrd" parameterType="prhibtWrdVO">
+		<selectKey resultType="string" keyProperty="prhibtWrdSeqNo" order="BEFORE">
+			SELECT PRHIBT_WRD_M01_SEQ1.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO T_PRHIBT_WRD_M01
+		(
+			PRHIBT_WRD_SEQ_NO
+			,PRHIBT_WRD
+			,USE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+			,DELETE_AT
+		)
+		VALUES
+		(
+			#{prhibtWrdSeqNo}
+			,#{prhibtWrd}
+			<if test='useAt == null or useAt == ""'>
+			,'Y'
+			</if>
+			<if test='useAt != null and useAt != ""'>
+			,#{useAt}
+			</if>
+			,SYSDATE
+			,#{registId}
+			,SYSDATE
+			,#{updtId}
+			,'N'
+		)
+	</insert>
+	
+	<select id="selectPrhibtWrd" parameterType="prhibtWrdVO" resultType="prhibtWrdVO">
+		SELECT
+			PRHIBT_WRD_SEQ_NO AS prhibtWrdSeqNo
+			,PRHIBT_WRD AS prhibtWrd  
+			<include refid="cmmn.Common.common-column1"></include>
+		FROM T_PRHIBT_WRD_M01
+		WHERE DELETE_AT = 'N'
+		  AND PRHIBT_WRD_SEQ_NO = #{prhibtWrdSeqNo}
+	</select>
+	
+	<update id="updatePrhibtWrd" parameterType="prhibtWrdVO">
+		UPDATE T_PRHIBT_WRD_M01
+		SET UPDT_DE = SYSDATE
+			,UPDT_ID = #{updtId}
+			<if test='useAt != null and useAt != ""'>
+			,USE_AT = #{useAt}
+			</if>
+			<if test='prhibtWrd != null and prhibtWrd != ""'>
+			,PRHIBT_WRD = #{prhibtWrd}
+			</if>
+		WHERE DELETE_AT = 'N'
+		  AND PRHIBT_WRD_SEQ_NO = #{prhibtWrdSeqNo} 
+	</update>
+	
+	<update id="deletePrhibtWrd" parameterType="prhibtWrdVO">
+		UPDATE T_PRHIBT_WRD_M01
+		SET UPDT_DE = SYSDATE
+			,UPDT_ID = #{updtId}
+			,DELETE_AT = 'Y'
+		WHERE DELETE_AT = 'N'
+		  AND PRHIBT_WRD_SEQ_NO = #{prhibtWrdSeqNo} 	
+	</update>
+	
+</mapper>

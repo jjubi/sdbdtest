@@ -1,0 +1,362 @@
+<div class="card">
+                        <div class="card-body">
+                            <h1 class="h1">테이블/검색 공통</h1>
+<!-- **************************************************************************** 참고 하세요 ****************************************************************************-->                            
+                            <h3 class="h3">게시판 상단 폼</h3>
+     						<div class="solidbox">
+     							<ul>
+									<li>검색만 있을 경우</li>
+									<li>버튼+검색</li>
+									<li>버튼+검색 여러개</li>
+								</ul>
+     						</div>
+     						<form id="searchForm" name="searchForm" action="" method="post">    
+	                            <fieldset>
+									<legend>게시물 검색</legend>
+									<div class="ui program-search" title="이 레이아웃은 하단 정보를 대한 검색 정보로 구성되어 있습니다.">
+										<div class="search_inner2 clearfix text-right">                   
+											<div class="search-select">
+												<span>
+													<select id="searchCondition" name="searchCondition" class="form-control">
+														<option value="1">이름</option>
+													</select>
+												</span>
+											</div>
+									
+											<div class="search-text">
+												<span>
+													<input id="searchKeyword" name="searchKeyword" class="form-control" title="검색어 입력" placeholder="검색어를 입력해 주세요" type="text" value="" maxlength="50">
+												</span>
+											</div>
+											<div class="search-btn">
+												<button type="button" class="btn btn-dark btn-sm" title="조회 버튼"><i class="fa fa-search" aria-hidden="true"></i> 조회</button>
+											</div>
+										</div>
+									</div>
+								</fieldset>
+	                            <!-- search field -->
+                            </form> 
+                            <div class="top-button">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-danger btn-sm" title="삭제 버튼">삭제</button>
+                                    <button type="submit" class="btn btn-basic btn-sm" title="등록 버튼" onclick="return fn_egov_addView();"><i class="fa fa-save" aria-hidden="true"></i> 등록</button>
+                                </div>
+                            </div>              
+     						<form id="searchForm" name="searchForm" action="" method="post">
+     							    
+	                            <fieldset>
+									<legend>게시물 검색</legend>
+									<div class="ui program-search" title="이 레이아웃은 하단 정보를 대한 검색 정보로 구성되어 있습니다.">
+										
+										<div class="search_inner2 text-right">
+										    <div class="search-date">
+                                                <span class="datepickerWrap">
+                                                    <input id="searchStartDate" name="searchStartDate" class="datepicker" title="시작일" placeholder="시작일" readonly="readonly" type="text" value="">
+                                                    <button type="button" class="icon"><i class="far fa-calendar-alt"></i></button>
+                                                </span>
+                                            </div>
+                                            <em class="data">~</em>
+                                            <div class="search-date">
+                                                <span class="datepickerWrap">
+                                                    <input id="searchEndDate" name="searchEndDate" class="datepicker" title="종료일" placeholder="종료일" readonly="readonly" type="text" value="">
+                                                    <button type="button" class="icon"><i class="far fa-calendar-alt"></i></button>
+                                                </span>
+                                            </div>
+									                                                 
+											<div class="search-select">
+												<span>
+													<select id="searchCondition" name="searchCondition" class="form-control">
+														<option value="1">이름</option>
+													</select>
+												</span>
+											</div>
+											<div class="search-text">
+												<span>
+													<input id="searchKeyword" name="searchKeyword" class="form-control" title="검색어 입력" placeholder="검색어를 입력해 주세요" type="text" value="" maxlength="50">
+												</span>
+											</div>
+											<div class="search-btn">
+												<button type="button" class="btn btn-dark btn-sm" onclick="return fn_egov_list();" title="등록 버튼"><i class="fa fa-search" aria-hidden="true"></i> 조회</button>
+											</div>
+										</div>
+										
+									</div>
+								</fieldset>
+	                            <!-- search field -->
+                            </form>
+                            <div class="top-button">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-danger btn-sm" title="삭제 버튼">삭제</button>
+                                    <button type="submit" class="btn btn-basic btn-sm" title="등록 버튼" onclick="return fn_egov_addView();"><i class="fa fa-save" aria-hidden="true"></i> 등록</button>
+                                </div>
+                            </div>    
+                            <form id="searchForm" name="searchForm" action="" method="post">
+                                <fieldset>
+                                    <legend>게시물 검색</legend>
+                                    <input name="pageIndex" type="hidden" value="1">
+                                    <input name="groupCode" type="hidden" value="">
+                                    <div class="ui program-search" title="이 레이아웃은 하단 정보를 대한 검색 정보로 구성되어 있습니다.">
+                                        <div class="search_inner2 clearfix text-right">
+                                             <div class="search-date">
+                                                <span class="datepickerWrap">
+                                                    <input id="searchStartDate" name="searchStartDate" class="datepicker" title="시작일" placeholder="시작일" readonly="readonly" type="text" value="">
+<!--                                                    <button class="icon"><i class="far fa-calendar-alt"></i></button>-->
+                                                    <button type="button" class="icon"><i class="far fa-calendar-alt"></i></button>
+                                                </span>
+                                            </div>
+                                            <em class="data">~</em>
+                                            <div class="search-date">
+                                                <span class="datepickerWrap">
+                                                    <input id="searchEndDate" name="searchEndDate" class="datepicker" title="종료일" placeholder="종료일" readonly="readonly" type="text" value="">
+                                                    <button type="button" class="icon"><i class="far fa-calendar-alt"></i></button>
+                                                </span>
+                                            </div>
+                                             
+                                            <div class="search-select">
+                                                <span>
+                                                    <select class="form-control" name="searchCondition" title="검색조건 선택">
+                                                        <option value="all">-전체-</option>
+                                                        <option value="groupName">그룹명</option>
+                                                        <option value="groupCode">그룹코드</option>
+                                                    </select>
+                                                </span>
+                                            </div>
+
+                                            <div class="search-select">
+                                                <span>
+                                                    <select class="form-control" name="searchCondition" title="검색조건 선택">
+                                                        <option value="all">-전체-</option>
+                                                        <option value="groupName">그룹명</option>
+                                                        <option value="groupCode">그룹코드</option>
+                                                    </select>
+                                                </span>
+                                            </div>
+
+                                            <div class="search-text">
+                                                <span><input type="text" name="searchKeyword" value="" maxlength="50" title="검색어 입력" placeholder="검색어를 입력해 주세요" class="form-control"></span>
+                                            </div>
+                                            <div class="search-text">
+                                                <span><input type="text" name="searchKeyword" value="" maxlength="50" title="검색어 입력" placeholder="검색어를 입력해 주세요" class="form-control"></span>
+                                            </div>
+                                            <div class="search-btn">
+                                             <button type="button" class="btn btn-dark btn-sm" onclick="#" title="등록 버튼"><i class="fa fa-search" aria-hidden="true"></i> 조회</button>
+                                         </div>
+                                        </div>
+                                        
+                                    </div>
+                                </fieldset>
+                            </form>
+                            <!-- 페이지당 게시물수 : start -->
+                            <div class="ui program-search-form">
+                                <!-- 게시글정보 -->
+                                <div class="ui program-info">
+                                    <div class="ui program-count">
+                                        <span>총 게시물 <strong>15</strong> 개
+                                        </span>, <span class="ui program--division-line">페이지 <strong>1</strong>
+                                            / 1
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- 게시글정보 -->
+                                <div class="program-page">
+                                    <label for="numPerPage">페이지당 게시물수</label>
+                                    <div class="search-select">
+                                        <span>
+                                            <select class="form-control" name="pageUnit" title="출력갯수 선택">
+                                                <option value="10">10개</option>
+                                                <option value="20" selected="selected">20개</option>
+                                                <option value="50">50개</option>
+                                            </select>
+                                        </span>
+                                    </div>
+                                    <button type="button" class="btn btn-secondary btn-sm" title="페이지당 게시물수 적용하기" onclick="">적용</button>
+                                </div>
+                            </div>
+                            <!-- 페이지당 게시물수 : end -->
+                                
+                                
+                            <h3 class="h3">테이블</h3>
+							<div class="solidbox">
+								<p class="color-red"> * 항상 테이블 반응형  div class="table-responsive" 안에 테이블 넣어야 반응형일 때 가로 스크롤 가능.</p>
+								<ul class="">
+									<li>table-hover : 마우스 hover시 가로(행) 색상 표시</li>
+									<li>table-bordered : 선 있는 테이블</li>
+									<li>text-center : 표 가운데 정렬.</li>
+									<li>thead-dark : thead 부분에 class="thead-dark" 시, 어두운 색상 테이블.</li>
+								</ul>
+							</div>
+						
+                            	<div class="table-responsive text-center">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>번호</th>
+                                            <th>유형</th>
+                                            <th>게시판코드</th>
+                                            <th>게시판명</th>
+                                            <th>출력여부</th>
+                                            <th>비고</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>15</td>
+                                            <td>일반</td>
+                                            <td>BBS_00000000</td>
+                                            <td>공지사항</td>
+                                            <td>N</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-basic btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                        		목록 <span class="caret"></span></button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li><a class="dropdown-item" href="#">수정</a></li>
+                                                        <li><a class="dropdown-item" href="#">권한</a></li>
+                                                        <li><a class="dropdown-item" href="#">게시판타입</a></li>
+                                                        <li class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item" href="#">게시판타입</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>14</td>
+                                            <td>일반</td>
+                                            <td>BBS_00000000</td>
+                                            <td>공지사항</td>
+                                            <td>N</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-basic btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                        목록 <span class="caret"></span></button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li><a class="dropdown-item" href="#">수정</a></li>
+                                                        <li><a class="dropdown-item" href="#">권한</a></li>
+                                                        <li><a class="dropdown-item" href="#">게시판타입</a></li>
+                                                        <li class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item" href="#">게시판타입</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>13</td>
+                                            <td>일반</td>
+                                            <td>BBS_00000000</td>
+                                            <td>공지사항</td>
+                                            <td>N</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-basic btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                       		 목록 <span class="caret"></span></button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li><a class="dropdown-item" href="#">수정</a></li>
+                                                        <li><a class="dropdown-item" href="#">권한</a></li>
+                                                        <li><a class="dropdown-item" href="#">게시판타입</a></li>
+                                                        <li class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item" href="#">게시판타입</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>12</td>
+                                            <td>일반</td>
+                                            <td>BBS_00000000</td>
+                                            <td>공지사항</td>
+                                            <td>N</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-basic btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                       		 목록 <span class="caret"></span></button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li><a class="dropdown-item" href="#">수정</a></li>
+                                                        <li><a class="dropdown-item" href="#">권한</a></li>
+                                                        <li><a class="dropdown-item" href="#">게시판타입</a></li>
+                                                        <li class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item" href="#">게시판타입</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                                
+                                <div class="table-responsive text-center">
+	                                <table class="table table-bordered table-hover table-checkbox">
+	                                    <thead>
+	                                        <tr>
+	                                            <th scope="col"><input type="checkbox" /></th>
+	                                            <th scope="col">제목</th>
+	                                            <th scope="col">본문</th>
+	                                            <th scope="col">작성자</th>
+	                                        </tr>
+	                                    </thead>
+	                                    <tbody>
+	                                        <tr>
+	                                            <th scope="row"><input type="checkbox" /></th>
+	                                            <td>아라얾</td>
+	                                            <td>ㅇㅁㄹㅇㄴㄻㅇ</td>
+	                                            <td>조현민</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th scope="row"><input type="checkbox" /></th>
+	                                            <td>아라얾</td>
+	                                            <td>ㅇㅁㄹㅇㄴㄻㅇ</td>
+	                                            <td>조현민</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <th scope="row"><input type="checkbox" /></th>
+	                                            <td>아라얾</td>
+	                                            <td>ㅇㅁㄹㅇㄴㄻㅇ</td>
+	                                            <td>조현민</td>
+	                                        </tr>
+	                                    </tbody>
+	                                </table>
+                                </div>
+                                 
+                                <div class="text-center">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-center">
+                                            <li class="page-item">
+                                                <a class="page-link prev" href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                    <span class="sr-only">Previous</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item">
+                                                <a class="page-link next" href="#" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                    <span class="sr-only">Next</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="text-center">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination">
+                                            <li class="page-item">
+                                                <a class="page-link prev" href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                    <span class="sr-only">Previous</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item">
+                                                <a class="page-link next" href="#" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                    <span class="sr-only">Next</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>

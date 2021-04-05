@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : BbsAuthor.xml 
+  * 상세설명 : 게시판 권한 데이터 핸들링
+  * 작성일시 : 2020. 12. 31
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2020. 12. 31.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.BbsAuthor">
+	<insert id="insertBbsAuthor" parameterType="bbsAuthorVO">
+		INSERT INTO T_BBS_AUTHOR_M01
+		(
+			BBS_ID
+			,NTT_REDNG_AUTHOR
+			,NTT_REGIST_AUTHOR
+			,NTT_UPDT_AUTHOR
+			,NTT_DELETE_AUTHOR
+			,NTT_FILE_UPLOAD_AUTHOR
+			,NTT_FILE_DWLD_AUTHOR
+			,CMT_REDNG_AUTHOR
+			,CMT_REGIST_AUTHOR
+			,CMT_UPDT_AUTHOR
+			,CMT_DELETE_AUTHOR
+			,ANSWER_REDNG_AUTHOR
+			,ANSWER_REGIST_AUTHOR
+			,ANSWER_UPDT_AUTHOR
+			,ANSWER_DELETE_AUTHOR
+			,SECRET_USE_AUTHOR
+			,NOTICE_USE_AUTHOR
+			,LC_INDICT_USE_AUTHOR
+			,POPUP_USE_AUTHOR
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+		)
+		VALUES
+		(
+			#{bbsId}
+			,#{nttRedngAuthor}
+			,#{nttRegistAuthor}
+			,#{nttUpdtAuthor}
+			,#{nttDeleteAuthor}
+			,#{nttFileUploadAuthor}
+			,#{nttFileDwldAuthor}
+			,#{cmtRedngAuthor}
+			,#{cmtRegistAuthor}
+			,#{cmtUpdtAuthor}
+			,#{cmtDeleteAuthor}
+			,#{answerRedngAuthor}
+			,#{answerRegistAuthor}
+			,#{answerUpdtAuthor}
+			,#{answerDeleteAuthor}
+			,#{secretUseAuthor}
+			,#{noticeUseAuthor}
+			,#{lcIndictUseAuthor}
+			,#{popupUseAuthor}
+			,'N'
+			,NOW()
+			,#{registId}
+			,NOW()
+			,#{updtId}
+		)
+	</insert>
+	
+	<select id="selectBbsAuthor" parameterType="bbsSearchVO" resultType="bbsAuthorVO">
+		SELECT
+			BBS_ID AS bbsId
+			,NTT_REDNG_AUTHOR AS nttRedngAuthor
+			,NTT_REGIST_AUTHOR AS nttRegistAuthor
+			,NTT_UPDT_AUTHOR AS nttUpdtAuthor
+			,NTT_DELETE_AUTHOR AS nttDeleteAuthor
+			,NTT_FILE_UPLOAD_AUTHOR AS nttFileUploadAuthor
+			,NTT_FILE_DWLD_AUTHOR AS nttFileDwldAuthor
+			,CMT_REDNG_AUTHOR AS cmtRedngAuthor
+			,CMT_REGIST_AUTHOR AS cmtRegistAuthor
+			,CMT_UPDT_AUTHOR AS cmtUpdtAuthor
+			,CMT_DELETE_AUTHOR AS cmtDeleteAuthor
+			,ANSWER_REDNG_AUTHOR AS answerRedngAuthor
+			,ANSWER_REGIST_AUTHOR AS answerRegistAuthor
+			,ANSWER_UPDT_AUTHOR AS answerUpdtAuthor
+			,ANSWER_DELETE_AUTHOR AS answerDeleteAuthor
+			,SECRET_USE_AUTHOR AS secretUseAuthor
+			,NOTICE_USE_AUTHOR AS noticeUseAuthor
+			,LC_INDICT_USE_AUTHOR AS lcIndictUseAuthor
+			,POPUP_USE_AUTHOR AS popupUseAuthor
+			,DATE_FORMAT(REGIST_DE, '%Y-%m-%d') AS registDe
+			,REGIST_ID AS registId
+			,DATE_FORMAT(UPDT_DE, '%Y-%m-%d') AS updtDe
+			,UPDT_ID AS updtId
+		FROM T_BBS_AUTHOR_M01
+		WHERE DELETE_AT = 'N'
+		  AND BBS_ID = #{bbsId}
+	</select>
+
+	<update id="updateBbsAuthor" parameterType="bbsAuthorVO">
+		UPDATE T_BBS_AUTHOR_M01
+		SET	NTT_REDNG_AUTHOR = #{nttRedngAuthor}
+			,NTT_REGIST_AUTHOR = #{nttRegistAuthor} 
+			,NTT_UPDT_AUTHOR = #{nttUpdtAuthor}
+			,NTT_DELETE_AUTHOR = #{nttDeleteAuthor}
+			,NTT_FILE_UPLOAD_AUTHOR = #{nttFileUploadAuthor}
+			,NTT_FILE_DWLD_AUTHOR = #{nttFileDwldAuthor}
+			,CMT_REDNG_AUTHOR = #{cmtRedngAuthor}
+			,CMT_REGIST_AUTHOR = #{cmtRegistAuthor}
+			,CMT_UPDT_AUTHOR = #{cmtUpdtAuthor}
+			,CMT_DELETE_AUTHOR = #{cmtDeleteAuthor}
+			,ANSWER_REDNG_AUTHOR = #{answerRedngAuthor}
+			,ANSWER_REGIST_AUTHOR = #{answerRegistAuthor}
+			,ANSWER_UPDT_AUTHOR = #{answerUpdtAuthor}
+			,ANSWER_DELETE_AUTHOR = #{answerDeleteAuthor}
+			,SECRET_USE_AUTHOR = #{secretUseAuthor}
+			,NOTICE_USE_AUTHOR = #{noticeUseAuthor}
+			,LC_INDICT_USE_AUTHOR = #{lcIndictUseAuthor}
+			,POPUP_USE_AUTHOR = #{popupUseAuthor}
+			,UPDT_DE = NOW()
+			,UPDT_ID = #{updtId}
+		WHERE DELETE_AT = 'N'
+		  AND BBS_ID = #{bbsId}
+	</update>
+
+</mapper>

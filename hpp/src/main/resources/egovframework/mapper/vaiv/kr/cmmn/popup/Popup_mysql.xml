@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  * Xml Name : Popup.xml 
+  * 상세설명 : 팝업 데이터 핸들링
+  * 작성일시 : 2020. 12. 31
+  * 작 성 자  : jo
+  * 수 정 이 력
+  * 
+  *   수정일         수정자    수정내용
+  * **********     ******    **********    
+  * 2020. 12. 31.    jo     최초등록
+  *
+  * 
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.Popup">
+	<select id="selectPopupList" parameterType="popupVO" resultType="popupVO">
+		SELECT
+			POPUP_SEQ_NO AS popupSeqNo
+			,POPUP_NM AS popupNm
+			,POPUP_DC AS popupDc
+			,POPUP_URL AS popupUrl
+			,ATCH_FILE_ID AS atchFileId
+			,DATE_FORMAT(POPUP_BGNDE, '%Y-%m-%d') AS popupBgnde
+			,DATE_FORMAT(POPUP_ENDDE, '%Y-%m-%d') AS popupEndde
+			,POPUP_ORDR AS popupOrdr
+			,POPUP_TY AS popupTy
+			,POPUP_TOP_LC AS popupTopLc
+			,POPUP_LEFT_LC AS popupLeftLc
+			<include refid="cmmn.Common.common-column1"></include>
+			,CASE
+				WHEN <![CDATA[DATE_FORMAT(NOW(), '%Y-%m-%d') > DATE_FORMAT(POPUP_ENDDE, '%Y-%m-%d')]]> THEN 'N'
+				WHEN <![CDATA[DATE_FORMAT(NOW(), '%Y-%m-%d') < DATE_FORMAT(POPUP_BGNDE, '%Y-%m-%d')]]> THEN 'P'
+				ELSE 'U'
+			END AS popupPdCheck
+		FROM T_POPUP_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND POPUP_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+         <if test='popupTy != null and popupTy != ""'>
+       	  AND POPUP_TY = #{popupTy}
+        </if>
+        <if test='useAt != null and useAt != ""'>
+       	  AND USE_AT = #{useAt}
+        </if>
+        <if test='pdCondition != null and pdCondition != ""'>
+       	  AND DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(POPUP_BGNDE, '%Y-%m-%d') AND DATE_FORMAT(POPUP_ENDDE, '%Y-%m-%d')
+        </if>
+        <choose>
+        	<when test='ordrCondition == "ordr"'>
+        		ORDER BY POPUP_ORDR ASC
+        	</when>
+        	<otherwise>
+        		ORDER BY REGIST_DE DESC	
+        	</otherwise>
+        </choose>
+        <include refid="cmmn.Common.common-paging"></include>
+	</select>
+	
+	<select id="selectPopupListTotCnt" parameterType="popupVO" resultType="int">
+		SELECT COUNT(*)
+		FROM T_POPUP_M01
+		WHERE DELETE_AT = 'N'
+		<if test="searchCondition == 1">
+		  AND POPUP_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+        </if>
+        <if test='useAt != null and useAt != ""'>
+       	  AND USE_AT = #{useAt}
+        </if>
+        <if test='pdCondition != null and pdCondition != ""'>
+       	  AND DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(POPUP_BGNDE, '%Y-%m-%d') AND DATE_FORMAT(POPUP_ENDDE, '%Y-%m-%d')
+        </if>
+	</select>
+	
+	<insert id="insertPopup" parameterType="popupVO">
+		INSERT INTO T_POPUP_M01
+		(
+			POPUP_NM
+			,POPUP_DC
+			,POPUP_URL
+			,ATCH_FILE_ID
+			,POPUP_BGNDE
+			,POPUP_ENDDE
+			,POPUP_ORDR
+			,POPUP_TY
+			,POPUP_TOP_LC
+			,POPUP_LEFT_LC
+			,USE_AT
+			,DELETE_AT
+			,REGIST_DE
+			,REGIST_ID
+			,UPDT_DE
+			,UPDT_ID
+		)
+		VALUES
+		(
+			#{popupNm}
+			,#{popupDc}
+			,#{popupUrl}
+			,#{atchFileId}
+			,#{popupBgnde}
+			,#{popupEndde}
+			,#{popupOrdr}
+			,#{popupTy}
+			,#{popupTopLc}
+			,#{popupLeftLc}
+			,#{useAt}
+			,'N'
+			,NOW()
+			,#{registId}
+			,NOW()
+			,#{updtId}
+		)
+	</insert>
+	
+	<select id="selectPopup" parameterType="popupVO" resultType="popupVO">
+		SELECT
+			POPUP_SEQ_NO AS popupSeqNo
+			,POPUP_NM AS popupNm
+			,POPUP_DC AS popupDc
+			,POPUP_URL AS popupUrl
+			,ATCH_FILE_ID AS atchFileId
+			,DATE_FORMAT(POPUP_BGNDE, '%Y-%m-%d') AS popupBgnde
+			,DATE_FORMAT(POPUP_ENDDE, '%Y-%m-%d') AS popupEndde
+			,POPUP_ORDR AS popupOrdr
+			,POPUP_TY AS popupTy
+			,POPUP_TOP_LC AS popupTopLc
+			,POPUP_LEFT_LC AS popupLeftLc
+			<include refid="cmmn.Common.common-column1"></include>
+		FROM T_POPUP_M01
+		WHERE DELETE_AT = 'N'
+		  AND POPUP_SEQ_NO = #{popupSeqNo}
+	</select>
+	
+	<update id="updatePopup" parameterType="popupVO">
+		UPDATE T_POPUP_M01
+		SET UPDT_DE = NOW()
+			,UPDT_ID = #{updtId}
+			,POPUP_NM = #{popupNm}
+			,POPUP_DC = #{popupDc}
+			,POPUP_URL = #{popupUrl}
+			,ATCH_FILE_ID = #{atchFileId}
+			,POPUP_BGNDE = #{popupBgnde}
+			,POPUP_ENDDE = #{popupEndde}
+			,POPUP_ORDR = #{popupOrdr}
+			,POPUP_TY = #{popupTy}
+			,POPUP_TOP_LC = #{popupTopLc}
+			,POPUP_LEFT_LC = #{popupLeftLc}
+			,USE_AT = #{useAt}
+		WHERE DELETE_AT = 'N'
+		  AND POPUP_SEQ_NO = #{popupSeqNo}
+	</update>
+	
+	<update id="deletePopup" parameterType="popupVO">
+		UPDATE T_POPUP_M01
+		SET UPDT_DE = NOW()
+			,UPDT_ID = #{updtId}
+			,DELETE_AT = 'Y'
+		WHERE DELETE_AT = 'N'
+		  AND POPUP_SEQ_NO = #{popupSeqNo}
+	</update>
+	
+	<update id="updatePopupOrdr" parameterType="popupVO">
+		UPDATE T_POPUP_M01
+		SET UPDT_DE = NOW()
+			,UPDT_ID = #{updtId}
+			,POPUP_ORDR = #{popupOrdr}
+		WHERE DELETE_AT = 'N'
+		  AND POPUP_SEQ_NO = #{popupSeqNo}
+	</update>
+
+	<update id="updatePopupUseAt" parameterType="popupVO">
+		UPDATE T_POPUP_M01
+		SET UPDT_DE = NOW()
+			,UPDT_ID = #{updtId}
+			,USE_AT = #{useAt}
+		WHERE DELETE_AT = 'N'
+		  AND POPUP_SEQ_NO = #{popupSeqNo}	
+	</update>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
