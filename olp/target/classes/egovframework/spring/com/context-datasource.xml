@@ -19,24 +19,24 @@
 	<alias name="dataSource" alias="egov.dataSource" />
 	
 	<!-- MySQL -->
-	<beans profile="mysql">  
-		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-			<property name="driverClassName" value="${Globals.mysql.DriverClassName}"/>
-			<property name="url" value="${Globals.mysql.Url}" />
-			<property name="username" value="${Globals.mysql.UserName}"/>
-			<property name="password" value="${Globals.mysql.Password}"/>
-		</bean>
-	</beans>
+<!-- 	<beans profile="mysql">   -->
+<!-- 		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"> -->
+<!-- 			<property name="driverClassName" value="${Globals.mysql.DriverClassName}"/> -->
+<!-- 			<property name="url" value="${Globals.mysql.Url}" /> -->
+<!-- 			<property name="username" value="${Globals.mysql.UserName}"/> -->
+<!-- 			<property name="password" value="${Globals.mysql.Password}"/> -->
+<!-- 		</bean> -->
+<!-- 	</beans> -->
 
 	<!-- oracle -->
-	<beans profile="oracle">
-		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-			<property name="driverClassName" value="${Globals.oracle.DriverClassName}"/>
-			<property name="url" value="${Globals.oracle.Url}" />
-			<property name="username" value="${Globals.oracle.UserName}"/>
-			<property name="password" value="${Globals.oracle.Password}"/>
-		</bean>
-	</beans>
+<!-- 	<beans profile="oracle"> -->
+<!-- 		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"> -->
+<!-- 			<property name="driverClassName" value="${Globals.oracle.DriverClassName}"/> -->
+<!-- 			<property name="url" value="${Globals.oracle.Url}" /> -->
+<!-- 			<property name="username" value="${Globals.oracle.UserName}"/> -->
+<!-- 			<property name="password" value="${Globals.oracle.Password}"/> -->
+<!-- 		</bean> -->
+<!-- 	</beans> -->
 
 	<!-- MariaDB -->
 	<beans profile="maria">
