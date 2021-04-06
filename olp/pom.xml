@@ -9,7 +9,6 @@
   <artifactId>olp</artifactId>
   <packaging>war</packaging>
   
-  
   <dependencies>
   	<dependency>
   		<groupId>vaiv.sdbd</groupId>
@@ -17,4 +16,9 @@
   		<version>1.0.0</version>
   	</dependency>
   </dependencies>
+  
+  <build>
+        <defaultGoal>install</defaultGoal>
+  </build>
+  
 </project>
